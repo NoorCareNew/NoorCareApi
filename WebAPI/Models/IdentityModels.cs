@@ -42,6 +42,7 @@ namespace WebAPI.Models
             modelBuilder.Entity<QuickHeathDetails>().ToTable("QuickHeathDetails");
             modelBuilder.Entity<HospitalDetail>().ToTable("HospitalDetail");
             modelBuilder.Entity<QuickUpload>().ToTable("QuickUpload");
+            modelBuilder.Entity<Doctor>().ToTable("Doctor");
         }
     }
 }
