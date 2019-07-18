@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result =  _doctorRepo.GetAll().ToList();
 
-            return Request.CreateResponse(HttpStatusCode.Accepted, result, "application/json");
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [Route("api/doctor/getdetail/{id}")]
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Find(x => x.Id == id).FirstOrDefault();
 
-            return Request.CreateResponse(HttpStatusCode.Accepted, result, "application/json");
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
             
         }
 
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result, "application/json");
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [Route("api/doctor/update")]
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Update(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result, "application/json");
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [Route("api/doctor/delete/{id}")]
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Delete(id);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result, "application/json");
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
     }
 }
