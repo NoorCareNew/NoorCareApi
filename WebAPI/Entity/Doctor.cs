@@ -22,8 +22,9 @@ namespace WebAPI.Entity
         public string PhoneNumber { get; set; }
         [MaxLength(50)]
         public string AlternatePhoneNumber { get; set; }
-        [MaxLength(50)]
-        public string Gender { get; set; }
+
+        public int Gender { get; set; }
+
         [MaxLength(50)]     
         public string Experience { get; set; }
         [Column(TypeName = "Money")]
@@ -38,6 +39,13 @@ namespace WebAPI.Entity
         public string Specialization { get; set; }
         [MaxLength(500)]
         public string PhotoPath { get; set; }
+        [MaxLength(50)]
+        public string DoctorId { get; set; }
+        [MaxLength(50)]
+        public string HospitalId { get; set; }
+
+        public int jobType { get; set; }
+        public int CountryCode { get; set; }
 
         public bool IsDeleted { get; set; }
         [MaxLength(128)]
