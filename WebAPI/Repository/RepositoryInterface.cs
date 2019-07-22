@@ -17,4 +17,5 @@ namespace WebAPI.Repository
     public interface IHospitalDetailsRepository : IRepository<HospitalDetail, int> { }
     public interface IQuickUploadRepository : IRepository<QuickUpload, int> { }
     public interface IDoctorRepository : IRepository<Doctor, int> { }
+    public interface ISecretaryRepository : IRepository<Secretary, int> { }
 }

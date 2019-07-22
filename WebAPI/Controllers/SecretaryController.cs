@@ -13,42 +13,39 @@ using System.Web.Http;
 using WebAPI.Entity;
 using WebAPI.Models;
 using WebAPI.Repository;
-using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
-    public class DoctorController : ApiController
+    public class SecretaryController : ApiController
     {
-        [Route("api/doctor/getall")]
+        [Route("api/secretary/getall")]
         [HttpGet]
         [AllowAnonymous]
-        // GET: api/Doctor
+        // GET: api/Secretary
         public HttpResponseMessage GetAll()
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result =  _doctorRepo.GetAll().ToList();
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.GetAll().ToList();
 
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/doctor/getdetail/{id}")]
+        [Route("api/secretary/getdetail/{id}")]
         [HttpGet]
         [AllowAnonymous]
-        // GET: api/Doctor/5
+        // GET: api/Secretary/5
         public HttpResponseMessage GetDetail(int id)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Find(x => x.Id == id).FirstOrDefault();
-
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.Find(x => x.Id == id).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
-            
         }
 
-        [Route("api/doctor/register")]
+        [Route("api/secretary/register")]
         [HttpPost]
         [AllowAnonymous]
-        // POST: api/Doctor
-        public HttpResponseMessage Register(Doctor obj)
+        // POST: api/Secretary
+        public HttpResponseMessage Register(Secretary obj)
         {
             ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
@@ -56,25 +53,23 @@ namespace WebAPI.Controllers
             var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
 
-            string doctorId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
+            string secretaryId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
 
-            obj.DoctorId = doctorId;
-
-
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Insert(obj);
+            obj.SecretaryId = secretaryId;
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.Insert(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [HttpPost]
-        [Route("api/doctor/uploadprofilepic")]
+        [Route("api/secretary/uploadprofilepic")]
         [AllowAnonymous]
         public IHttpActionResult UploadProfilePic()
         {
             string imageName = null;
             var httpRequest = HttpContext.Current.Request;
 
-            string doctorId = httpRequest.Form["DoctorId"];
+            string secretaryId = httpRequest.Form["SecretaryId"];
             try
             {
                 var postedFile = httpRequest.Files["Image"];
@@ -83,9 +78,9 @@ namespace WebAPI.Controllers
                     imageName = new String(Path.GetFileNameWithoutExtension(postedFile.FileName).
                         Take(10).ToArray()).
                         Replace(" ", "-");
-                    imageName = doctorId + "." + ImageFormat.Jpeg;
-                    var filePath = HttpContext.Current.Server.MapPath("~/ProfilePic/Doctor/" + imageName);
-                    bool exists = System.IO.Directory.Exists(HttpContext.Current.Server.MapPath("~/ProfilePic/Doctor/" + imageName));
+                    imageName = secretaryId + "." + ImageFormat.Jpeg;
+                    var filePath = HttpContext.Current.Server.MapPath("~/ProfilePic/Secretary/" + imageName);
+                    bool exists = System.IO.Directory.Exists(HttpContext.Current.Server.MapPath("~/ProfilePic/Secretary/" + imageName));
                     if (exists)
                     {
                         File.Delete(filePath);
@@ -93,46 +88,46 @@ namespace WebAPI.Controllers
                     postedFile.SaveAs(filePath);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
-            return Ok(doctorId);
+            return Ok(secretaryId);
         }
 
         [HttpGet]
-        [Route("api/Doctor/profile/{DoctorId}")]
+        [Route("api/secretary/profile/{secretaryId}")]
         [AllowAnonymous]
-        public IHttpActionResult getDoctorProfile(string DoctorId)
+        public IHttpActionResult getSecretaryProfile(string secretaryId)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            return Ok(_doctorRepo.Find(x => x.DoctorId == DoctorId));
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            return Ok(_secretaryRepo.Find(x => x.SecretaryId == secretaryId));
         }
 
 
-        [Route("api/doctor/update")]
+        [Route("api/secretary/update")]
         [HttpPut]
         [AllowAnonymous]
-        // PUT: api/Doctor/5
-        public HttpResponseMessage Update(Doctor obj)
+        // PUT: api/Secretary/5
+        public HttpResponseMessage Update(Secretary obj)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Update(obj);
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/doctor/delete/{id}")]
+        [Route("api/secretary/delete/{id}")]
         [HttpDelete]
         [AllowAnonymous]
-        // DELETE: api/Doctor/5
+        // DELETE: api/Secretary/5
         public HttpResponseMessage Delete(int id)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Delete(id);
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.Delete(id);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
 
-        public string creatIdPrix(Doctor model)
+        public string creatIdPrix(Secretary model)
         {
             string priFix = "NCM-";
             if (model.jobType == 2)

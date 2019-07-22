@@ -66,6 +66,11 @@ namespace NoorCare.Repository
                     {
                         return new DoctorRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(ISecretaryRepository))
+                    {
+                        return new SecretaryRepository() as TRepository;
+                    }
+
                     return null;
                 default:
                     return null;
