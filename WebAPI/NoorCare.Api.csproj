@@ -191,6 +191,7 @@
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuickHealthReportController.cs" />
+    <Compile Include="Controllers\SecretaryController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Entity\Doctor.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Entity\Facility.cs" />
     <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\MedicalInformation.cs" />
+    <Compile Include="Entity\Secretary.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -210,6 +212,14 @@
     <Compile Include="Migrations\201907181312361_AlterDoctortable.cs" />
     <Compile Include="Migrations\201907181312361_AlterDoctortable.Designer.cs">
       <DependentUpon>201907181312361_AlterDoctortable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907211101216_tblDoctormigration.cs" />
+    <Compile Include="Migrations\201907211101216_tblDoctormigration.Designer.cs">
+      <DependentUpon>201907211101216_tblDoctormigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907211428250_AddSecretary.cs" />
+    <Compile Include="Migrations\201907211428250_AddSecretary.Designer.cs">
+      <DependentUpon>201907211428250_AddSecretary.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModel.cs" />
@@ -283,6 +293,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907181312361_AlterDoctortable.resx">
       <DependentUpon>201907181312361_AlterDoctortable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907211101216_tblDoctormigration.resx">
+      <DependentUpon>201907211101216_tblDoctormigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907211428250_AddSecretary.resx">
+      <DependentUpon>201907211428250_AddSecretary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
