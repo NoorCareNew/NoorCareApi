@@ -31,17 +31,16 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/doctor/getdetail/{id}")]
+        [Route("api/doctor/getdetail/{doctorid}")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Doctor/5
-        public HttpResponseMessage GetDetail(int id)
+        public HttpResponseMessage GetDetail(string doctorid)
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Find(x => x.Id == id).FirstOrDefault();
+            var result = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
 
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
-            
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);            
         }
 
         [Route("api/doctor/register")]
@@ -115,22 +114,33 @@ namespace WebAPI.Controllers
         // PUT: api/Doctor/5
         public HttpResponseMessage Update(Doctor obj)
         {
+            int tbleId = getTableId(obj.DoctorId);
+            obj.Id = tbleId;
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/doctor/delete/{id}")]
+        [Route("api/doctor/delete/{doctorid}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Doctor/5
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(string doctorid)
         {
+            int tbleId= getTableId(doctorid);
+
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Delete(id);
+            var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
+        private int getTableId(string doctorId)
+        {
+            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+            var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
+
+            return result.Id;
+        }
 
         public string creatIdPrix(Doctor model)
         {

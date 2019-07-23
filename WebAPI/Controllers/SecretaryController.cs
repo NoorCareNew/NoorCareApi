@@ -34,10 +34,10 @@ namespace WebAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Secretary/5
-        public HttpResponseMessage GetDetail(int id)
+        public HttpResponseMessage GetDetail(string secretaryId)
         {
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Find(x => x.Id == id).FirstOrDefault();
+            var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
@@ -102,30 +102,41 @@ namespace WebAPI.Controllers
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             return Ok(_secretaryRepo.Find(x => x.SecretaryId == secretaryId));
         }
-
-
+        
         [Route("api/secretary/update")]
         [HttpPut]
         [AllowAnonymous]
         // PUT: api/Secretary/5
         public HttpResponseMessage Update(Secretary obj)
         {
+            int tbleId = getTableId(obj.SecretaryId);
+            obj.Id = tbleId;
+
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var result = _secretaryRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/secretary/delete/{id}")]
+        [Route("api/secretary/delete/{doctorid}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Secretary/5
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(string doctorid)
         {
+            int tbleId = getTableId(doctorid);
+
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Delete(id);
+            var result = _secretaryRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
+        private int getTableId(string secretaryId)
+        {
+            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
+
+            return result.Id;
+        }
 
         public string creatIdPrix(Secretary model)
         {
