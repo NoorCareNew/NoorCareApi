@@ -15,23 +15,17 @@ namespace AngularJSAuthentication.API.Services
             string html = File.ReadAllText(HttpContext.Current.Server.MapPath("~/Services/templat.html"));
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            mail.From = new MailAddress("noorcare2019@gmail.com");
+            mail.From = new MailAddress("NoorCareNew@gmail.com");
             mail.To.Add(mailTo);
-            mail.IsBodyHtml = true; //to make message body as html  
+            mail.IsBodyHtml = true;
             mail.Subject = "Registration Successfully ";
-            //for (int i = 10; i <= ClientId.Length; i += 3)
-            //{
-            //    ClientId = i == 15 ? ClientId : ClientId.Insert(i, "-");
-            //    i++;
-            //}
             mail.Body = html.Replace("CLIENTNAME", clientName +"("+ ClientId + ")");
-             
             mail.Body = getLogoUrl(mail.Body);
             mail.Body = getVereficationUrl(mail.Body, ClientId);
             SmtpServer.Port = 587;
             SmtpServer.EnableSsl = true;
             SmtpServer.UseDefaultCredentials = false;
-            SmtpServer.Credentials = new NetworkCredential("noorcare2019@gmail.com", "NoorCare@123");
+            SmtpServer.Credentials = new NetworkCredential("NoorCareNew@gmail.com", "NoorCare@2019");
             SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
             SmtpServer.Send(mail);
 

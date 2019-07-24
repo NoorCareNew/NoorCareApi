@@ -205,23 +205,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201907181251233_tblDoctorAdd.cs" />
-    <Compile Include="Migrations\201907181251233_tblDoctorAdd.Designer.cs">
-      <DependentUpon>201907181251233_tblDoctorAdd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907181312361_AlterDoctortable.cs" />
-    <Compile Include="Migrations\201907181312361_AlterDoctortable.Designer.cs">
-      <DependentUpon>201907181312361_AlterDoctortable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907211101216_tblDoctormigration.cs" />
-    <Compile Include="Migrations\201907211101216_tblDoctormigration.Designer.cs">
-      <DependentUpon>201907211101216_tblDoctormigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907211428250_AddSecretary.cs" />
-    <Compile Include="Migrations\201907211428250_AddSecretary.Designer.cs">
-      <DependentUpon>201907211428250_AddSecretary.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -286,20 +269,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201907181251233_tblDoctorAdd.resx">
-      <DependentUpon>201907181251233_tblDoctorAdd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907181312361_AlterDoctortable.resx">
-      <DependentUpon>201907181312361_AlterDoctortable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907211101216_tblDoctormigration.resx">
-      <DependentUpon>201907211101216_tblDoctormigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907211428250_AddSecretary.resx">
-      <DependentUpon>201907211428250_AddSecretary.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
