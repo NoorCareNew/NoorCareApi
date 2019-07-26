@@ -88,28 +88,28 @@ namespace WebAPI.Entity
         public string Other { get; set; }
     }
 
-    [Serializable]
-    [Table("HospitalDetail")]
-    public class HospitalDetail : IEntity<int>
-    {
-        [Key]
-        public int Id { get; set; }
-        public string HospitalName { get; set; }
-        public string Address { get; set; }
-        public int Mobile { get; set; }
-        public string Email { get; set; }
-        public string Website { get; set; }
-        public string FullName { get; set; }
-        public string HospitalId { get; set; }
-        public string EstablishYear { get; set; }
-        public int NumberofBed { get; set; }
-        public int NumberofAmbulance { get; set; }
-        public string PaymentType { get; set; }
-        public int Emergency { get; set; }
-        public int FacilityId { get; set; }
-        public int jobType { get; set; }
-        public bool EmailConfirmed { get; set; }
-    }
+    //[Serializable]
+    //[Table("HospitalDetail")]
+    //public class HospitalDetail : IEntity<int>
+    //{
+    //    [Key]
+    //    public int Id { get; set; }
+    //    public string HospitalName { get; set; }
+    //    public string Address { get; set; }
+    //    public int Mobile { get; set; }
+    //    public string Email { get; set; }
+    //    public string Website { get; set; }
+    //    public string FullName { get; set; }
+    //    public string HospitalId { get; set; }
+    //    public string EstablishYear { get; set; }
+    //    public int NumberofBed { get; set; }
+    //    public int NumberofAmbulance { get; set; }
+    //    public string PaymentType { get; set; }
+    //    public int Emergency { get; set; }
+    //    public int FacilityId { get; set; }
+    //    public int jobType { get; set; }
+    //    public bool EmailConfirmed { get; set; }
+    //}
 
     [Serializable]
     [Table("QuickUpload")]

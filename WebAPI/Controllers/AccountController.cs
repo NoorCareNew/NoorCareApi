@@ -201,7 +201,7 @@ namespace WebAPI.Controllers
         {
             if (userName.Contains("NCH"))
             {
-                HospitalDetail hospitalDetails = _hospitalDetailsRepository.Find(x => x.HospitalId.Trim() == userName.Trim()).FirstOrDefault();
+                HospitalDetails hospitalDetails = _hospitalDetailsRepository.Find(x => x.HospitalId.Trim() == userName.Trim()).FirstOrDefault();
                 if (hospitalDetails != null)
                 {
                     hospitalDetails.EmailConfirmed = true;

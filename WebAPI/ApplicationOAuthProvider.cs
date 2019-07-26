@@ -20,7 +20,7 @@ namespace WebAPI
         IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
 
         ClientDetail clientDetailRepo = null;
-        HospitalDetail hospitalDetails;
+        HospitalDetails hospitalDetails;
         int jobType = 1;
         bool isEmailConfirmed = false;
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
