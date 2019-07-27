@@ -1,32 +1,35 @@
-﻿using NoorCare.Repository;
-using System;
-using System.Collections.Generic;
+﻿using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Repository;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class QuickHealthReportController : ApiController
+    public class QuickHealthReportController : ApiControllerBase
     {
-        IQuickHealthRepository _quickHealthRepository =
-            RepositoryFactory.Create<IQuickHealthRepository>(ContextTypes.EntityFramework);
-
-        IHospitalDetailsRepository _hospitalDetailsRepository =
-            RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
-
-        IQuickUploadRepository _quickUploadRepository =
-            RepositoryFactory.Create<IQuickUploadRepository>(ContextTypes.EntityFramework);
+        private readonly IEntityBaseRepository<HospitalDetails> _hospitalDetailsRepository;
+        private readonly IEntityBaseRepository<QuickHeathDetails> _quickHeathDetailsRepository;
+        private readonly IEntityBaseRepository<QuickUpload> _quickUploadRepository;
+        public QuickHealthReportController(IEntityBaseRepository<HospitalDetails> hospitalDetailsRepository,
+                                        IEntityBaseRepository<QuickHeathDetails> quickHeathDetailsRepository,
+                                         IEntityBaseRepository<QuickUpload> quickUploadRepository,
+                                    IEntityBaseRepository<Error> _errorsRepository,
+                                    IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _hospitalDetailsRepository = hospitalDetailsRepository;
+            _quickHeathDetailsRepository = quickHeathDetailsRepository;
+            _quickUploadRepository = quickUploadRepository;
+        }
 
         [HttpGet]
         [Route("api/user/get/quickHealth/{ClientId}")]
         [AllowAnonymous]
         public IHttpActionResult getQuickHealth(string ClientId)
         {
-            QuickHeathDetails _quickHeathDetails = _quickHealthRepository.Find(x => x.ClientId == ClientId).FirstOrDefault();
+            QuickHeathDetails _quickHeathDetails = _quickHeathDetailsRepository.FindBy(x => x.ClientId == ClientId).FirstOrDefault();
             return Ok(_quickHeathDetails);
         }
 
@@ -48,7 +51,9 @@ namespace NoorCare.WebAPI.Controllers
                 Cholesterol = _quickHeathDetails.Cholesterol,
                 Other = _quickHeathDetails.Other,
             };
-            return Ok(_quickHealthRepository.Insert(quickHeathDetails));
+            _quickHeathDetailsRepository.Add(quickHeathDetails);
+            _unitOfWork.Commit();
+            return Ok(quickHeathDetails);
         }
 
         [HttpPost]
@@ -56,13 +61,15 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult AddQuickUpload(string ClientId, QuickUpload _quickUpload)
         {
-            QuickUpload quickHeathDetails = new QuickUpload
+            QuickUpload quickUpload = new QuickUpload
             {
                 ClientId = ClientId,
                 HospitalId = _quickUpload.HospitalId,
                 DesiesType = _quickUpload.DesiesType,
             };
-            return Ok(_quickUploadRepository.Insert(quickHeathDetails));
+            _quickUploadRepository.Add(quickUpload);
+            _unitOfWork.Commit();
+            return Ok();
         }
 
         [HttpPost]
@@ -70,7 +77,7 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult AddHospital(HospitalDetails _hospitalDetail)
         {
-            HospitalDetails _HospitalDetail = _hospitalDetailsRepository.Find(
+            HospitalDetails _HospitalDetail = _hospitalDetailsRepository.FindBy(
                 x => x.HospitalName.ToLower() == _hospitalDetail.HospitalName.ToLower()
                 || x.HospitalName.ToLower() == _hospitalDetail.HospitalName.ToLower()
                 || x.Mobile == _hospitalDetail.Mobile
@@ -87,7 +94,9 @@ namespace NoorCare.WebAPI.Controllers
                     Email = _hospitalDetail.Email,
                     Website = _hospitalDetail.Website,
                 };
-                return Ok(_hospitalDetailsRepository.Insert(hospitalDetail));
+                _hospitalDetailsRepository.Add(hospitalDetail);
+                _unitOfWork.Commit();
+                return Ok(hospitalDetail);
             }
             else
             {

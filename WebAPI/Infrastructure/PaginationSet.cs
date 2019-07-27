@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace HomeCinema.Web.Infrastructure.Core
+namespace NoorCare.Web.Infrastructure.Core
 {
     public class PaginationSet<T>
     {

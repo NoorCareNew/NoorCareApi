@@ -1,25 +1,26 @@
-﻿using NoorCare.Repository;
-using System;
-using System.Collections.Generic;
+﻿using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Repository;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class UserController : ApiController
+    public class UserController : ApiControllerBase
     {
-        IEmergencyContactRepository _emergencyContactRepository =
-            RepositoryFactory.Create<IEmergencyContactRepository>(ContextTypes.EntityFramework);
-
-        IMedicalInformationRepository _medicalInformationRepository =
-            RepositoryFactory.Create<IMedicalInformationRepository>(ContextTypes.EntityFramework);
-
-        IInsuranceInformationRepository _insuranceInformationRepository =
-            RepositoryFactory.Create<IInsuranceInformationRepository>(ContextTypes.EntityFramework);
+        private readonly IEntityBaseRepository<EmergencyContact> _emergencyContactRepo;
+        private readonly IEntityBaseRepository<MedicalInformation> _medicalInformationRepo;
+        private readonly IEntityBaseRepository<InsuranceInformation> _insuranceInformationRepo;
+        public UserController(IEntityBaseRepository<EmergencyContact> emergencyContactRepo,
+                              IEntityBaseRepository<MedicalInformation> medicalInformationRepo,
+                              IEntityBaseRepository<InsuranceInformation> insuranceInformationRepo,
+                              IEntityBaseRepository<Error> _errorsRepository,
+                              IUnitOfWork _unitOfWork): base(_errorsRepository, _unitOfWork) {
+            _emergencyContactRepo = emergencyContactRepo;
+            _medicalInformationRepo = medicalInformationRepo;
+            _insuranceInformationRepo = insuranceInformationRepo;
+        }
 
         /// <summary>
         /// Emergency Contact Detail
@@ -44,14 +45,16 @@ namespace NoorCare.WebAPI.Controllers
                 WorkNumber = emergencyContact.WorkNumber,
                 Address = emergencyContact.Address,
             };
-            return Ok(_emergencyContactRepository.Insert(_clientDetail));
+            _emergencyContactRepo.Add(_clientDetail);
+            _unitOfWork.Commit();
+            return Ok(_clientDetail);
         }
 
         [HttpPost]
         [Route("api/user/update/emergencyContact/{ClientId}")]
         public IHttpActionResult UpdateEmergencyContact(string ClientId, EmergencyContact emergencyContact)
         {
-            EmergencyContact eContact = _emergencyContactRepository.Find(x => x.clientId == ClientId).FirstOrDefault();
+            EmergencyContact eContact = _emergencyContactRepo.FindBy(x => x.clientId == ClientId).FirstOrDefault();
 
             eContact.FirstName = emergencyContact.FirstName;
             eContact.LastName = emergencyContact.LastName;
@@ -62,14 +65,16 @@ namespace NoorCare.WebAPI.Controllers
             eContact.AlternateNumber = emergencyContact.AlternateNumber;
             eContact.WorkNumber = emergencyContact.WorkNumber;
             eContact.Address = emergencyContact.Address;
-            return Ok(_emergencyContactRepository.Update(eContact));
+            _emergencyContactRepo.Edit(eContact);
+            _unitOfWork.Commit();
+            return Ok(eContact);
         }
 
         [HttpGet]
         [Route("api/user/get/emergencycontact/{ClientId}")]
         public IHttpActionResult getEmergencyContact(string ClientId)
         {
-            EmergencyContact _emContact = _emergencyContactRepository.Find(x => x.clientId == ClientId).FirstOrDefault();
+            EmergencyContact _emContact = _emergencyContactRepo.FindBy(x => x.clientId == ClientId).FirstOrDefault();
             return Ok(_emContact);
         }
 
@@ -98,14 +103,16 @@ namespace NoorCare.WebAPI.Controllers
                 Drink = medicalInformation.Drink,
                 OtherDetails = medicalInformation.OtherDetails
             };
-            return Ok(_medicalInformationRepository.Insert(_medicalInformation));
+            _medicalInformationRepo.Add(_medicalInformation);
+            _unitOfWork.Commit();
+            return Ok(_medicalInformation);
         }
 
         [HttpPost]
         [Route("api/user/update/medicalinfo/{ClientId}")]
         public IHttpActionResult UpdateMedicalInformation(string ClientId, MedicalInformation medicalInformation)
         {
-            MedicalInformation mInfo = _medicalInformationRepository.Find(x => x.clientId == ClientId).FirstOrDefault();
+            MedicalInformation mInfo = _medicalInformationRepo.FindBy(x => x.clientId == ClientId).FirstOrDefault();
 
             mInfo.Hight = medicalInformation.Hight;
             mInfo.Wight = medicalInformation.Wight;
@@ -118,14 +125,16 @@ namespace NoorCare.WebAPI.Controllers
             mInfo.Smoke = medicalInformation.Smoke;
             mInfo.Drink = medicalInformation.Drink;
             mInfo.OtherDetails = medicalInformation.OtherDetails;
-            return Ok(_medicalInformationRepository.Update(mInfo));
+            _medicalInformationRepo.Edit(mInfo);
+            _unitOfWork.Commit();
+            return Ok(mInfo);
         }
 
         [HttpGet]
         [Route("api/user/get/medicalinfo/{ClientId}")]
         public IHttpActionResult getMedicalInformationt(string ClientId)
         {
-            MedicalInformation _miContact = _medicalInformationRepository.Find(x => x.clientId == ClientId).FirstOrDefault();
+            MedicalInformation _miContact = _medicalInformationRepo.FindBy(x => x.clientId == ClientId).FirstOrDefault();
             return Ok(_miContact);
         }
 
@@ -134,7 +143,7 @@ namespace NoorCare.WebAPI.Controllers
         [Route("api/user/get/insuranceinfo/{ClientId}")]
         public IHttpActionResult getInsurancenformationt(string ClientId)
         {
-            InsuranceInformation _insuranceContact = _insuranceInformationRepository.Find(x => x.ClientId == ClientId).FirstOrDefault();
+            InsuranceInformation _insuranceContact = _insuranceInformationRepo.FindBy(x => x.ClientId == ClientId).FirstOrDefault();
             return Ok(_insuranceContact);
         }
 
@@ -149,19 +158,23 @@ namespace NoorCare.WebAPI.Controllers
                 CompanyName = insuranceInformation.CompanyName,
                 InsuraceNo = insuranceInformation.InsuraceNo
             };
-            return Ok(_insuranceInformationRepository.Insert(_insuranceInformation));
+            _insuranceInformationRepo.Add(_insuranceInformation);
+            _unitOfWork.Commit();
+            return Ok(_insuranceInformation);
         }
 
         [HttpPost]
         [Route("api/user/update/insuranceinfo/{ClientId}")]
         public IHttpActionResult UpdateInsurancenformationt(string ClientId, InsuranceInformation insuranceInformation)
         {
-            InsuranceInformation _insuranceInformation = _insuranceInformationRepository.Find(x => x.ClientId == ClientId).FirstOrDefault();
+            InsuranceInformation _insuranceInformation = _insuranceInformationRepo.FindBy(x => x.ClientId == ClientId).FirstOrDefault();
 
             _insuranceInformation.ClientId = ClientId;
             _insuranceInformation.CompanyName = insuranceInformation.CompanyName;
             _insuranceInformation.InsuraceNo = insuranceInformation.InsuraceNo;
-            return Ok(_insuranceInformationRepository.Update(_insuranceInformation));
+            _insuranceInformationRepo.Edit(_insuranceInformation);
+            _unitOfWork.Commit();
+            return Ok(_insuranceInformation);
         }
 
     }

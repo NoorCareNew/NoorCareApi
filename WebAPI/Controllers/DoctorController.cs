@@ -1,7 +1,11 @@
-﻿using AngularJSAuthentication.API.Services;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NoorCare.Repository;
+using NoorCare.API.Services;
+using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
+using NoorCare.WebAPI.Models;
 using System;
 using System.Drawing.Imaging;
 using System.IO;
@@ -10,24 +14,33 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
-using WebAPI.Services;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class DoctorController : ApiController
+    public class DoctorController : ApiControllerBase
     {
+
+        private readonly IEntityBaseRepository<CountryCode> _countryCodeRepository;
+        private readonly IEntityBaseRepository<Doctor> _doctorRepo;
+        EmailSender _emailSender = new EmailSender();
+
+        public DoctorController(IEntityBaseRepository<CountryCode> countryCodeRepository,
+                                    IEntityBaseRepository<Doctor> doctorRepo,
+                                    IEntityBaseRepository<Error> _errorsRepository,
+                                    IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _countryCodeRepository = countryCodeRepository;
+            _doctorRepo = doctorRepo;
+        }
+
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Doctor
         public HttpResponseMessage GetAll()
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result =  _doctorRepo.GetAll().ToList();
-
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
@@ -35,34 +48,27 @@ namespace NoorCare.WebAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Doctor/5
-        public HttpResponseMessage GetDetail(string doctorid)
+        public IHttpActionResult GetDetail(string doctorid)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
-
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);            
+            var result = _doctorRepo.FindBy(x => x.DoctorId == doctorid).FirstOrDefault();
+            return Ok(result);            
         }
 
         [Route("api/doctor/register")]
         [HttpPost]
         [AllowAnonymous]
         // POST: api/Doctor
-        public HttpResponseMessage Register(Doctor obj)
+        public IHttpActionResult Register(Doctor obj)
         {
-            ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
-            CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
-            EmailSender _emailSender = new EmailSender();
+            CountryCode countryCode = _countryCodeRepository.FindBy(x => x.Id == obj.CountryCode).FirstOrDefault();
+            
             var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-
             string doctorId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
-
             obj.DoctorId = doctorId;
-
-
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+             _doctorRepo.Add(obj);
+            _unitOfWork.Commit();
+            return Ok();
         }
 
         [HttpPost]
@@ -103,8 +109,7 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult getDoctorProfile(string DoctorId)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            return Ok(_doctorRepo.Find(x => x.DoctorId == DoctorId));
+            return Ok(_doctorRepo.FindBy(x => x.DoctorId == DoctorId));
         }
 
 
@@ -112,33 +117,30 @@ namespace NoorCare.WebAPI.Controllers
         [HttpPut]
         [AllowAnonymous]
         // PUT: api/Doctor/5
-        public HttpResponseMessage Update(Doctor obj)
+        public IHttpActionResult Update(Doctor obj)
         {
             int tbleId = getTableId(obj.DoctorId);
             obj.Id = tbleId;
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Update(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            _doctorRepo.Edit(obj);
+            _unitOfWork.Commit();
+            return Ok();
         }
 
         [Route("api/doctor/delete/{doctorid}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Doctor/5
-        public HttpResponseMessage Delete(string doctorid)
+        public IHttpActionResult Delete(string doctorid)
         {
             int tbleId= getTableId(doctorid);
-
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Delete(tbleId);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            _doctorRepo.Delete(_doctorRepo.GetSingle(tbleId));
+            _unitOfWork.Commit();
+            return Ok();
         }
 
         private int getTableId(string doctorId)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
-
+            var result = _doctorRepo.FindBy(x => x.DoctorId == doctorId).FirstOrDefault();
             return result.Id;
         }
 

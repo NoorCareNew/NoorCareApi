@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 
-namespace HomeCinema.Web.Infrastructure.Core
+namespace NoorCare.Web.Infrastructure.Core
 {
     public class UploadMultipartFormProvider : MultipartFormDataStreamProvider
     {

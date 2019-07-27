@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoorCare.Entity;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,7 +7,7 @@ namespace NoorCare.WebAPI.Entity
 {
     [Serializable]
     [Table("MedicalInformation")]
-    public class MedicalInformation
+    public class MedicalInformation : IEntityBase
     {
         [Key]
         public int Id { get; set; }

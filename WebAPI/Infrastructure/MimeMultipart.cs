@@ -9,7 +9,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 
-namespace HomeCinema.Web.Infrastructure.Core
+namespace NoorCare.Web.Infrastructure.Core
 {
     public class MimeMultipart : System.Web.Http.Filters.ActionFilterAttribute
     {

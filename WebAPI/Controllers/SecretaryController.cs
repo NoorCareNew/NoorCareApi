@@ -1,7 +1,11 @@
-﻿using AngularJSAuthentication.API.Services;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NoorCare.Repository;
+using NoorCare.API.Services;
+using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
+using NoorCare.WebAPI.Models;
 using System;
 using System.Drawing.Imaging;
 using System.IO;
@@ -10,45 +14,51 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class SecretaryController : ApiController
+    public class SecretaryController : ApiControllerBase
     {
+
+        private readonly IEntityBaseRepository<Secretary> _secretaryRepo;
+        private readonly IEntityBaseRepository<CountryCode> _countryCodeRepository;
+        public SecretaryController(IEntityBaseRepository<Secretary> secretaryRepository,
+                                        IEntityBaseRepository<CountryCode> countryCodeRepo,
+                                    IEntityBaseRepository<Error> _errorsRepository,
+                                    IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _secretaryRepo = secretaryRepository;
+            _countryCodeRepository = countryCodeRepo;
+        }
+
         [Route("api/secretary/getall")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Secretary
-        public HttpResponseMessage GetAll()
+        public IHttpActionResult GetAll()
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var result = _secretaryRepo.GetAll().ToList();
-
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            return Ok(result);
         }
 
         [Route("api/secretary/getdetail/{id}")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Secretary/5
-        public HttpResponseMessage GetDetail(string secretaryId)
+        public IHttpActionResult GetDetail(string secretaryId)
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            var result = _secretaryRepo.FindBy(x => x.SecretaryId == secretaryId).FirstOrDefault();
+            return Ok(result);
         }
 
         [Route("api/secretary/register")]
         [HttpPost]
         [AllowAnonymous]
         // POST: api/Secretary
-        public HttpResponseMessage Register(Secretary obj)
+        public IHttpActionResult Register(Secretary obj)
         {
-            ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
-            CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
+            CountryCode countryCode = _countryCodeRepository.FindBy(x => x.Id == obj.CountryCode).FirstOrDefault();
             EmailSender _emailSender = new EmailSender();
             var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
@@ -56,9 +66,9 @@ namespace NoorCare.WebAPI.Controllers
             string secretaryId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
 
             obj.SecretaryId = secretaryId;
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            _secretaryRepo.Add(obj);
+            _unitOfWork.Commit();
+            return Ok(obj);
         }
 
         [HttpPost]
@@ -99,41 +109,38 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult getSecretaryProfile(string secretaryId)
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            return Ok(_secretaryRepo.Find(x => x.SecretaryId == secretaryId));
+            return Ok(_secretaryRepo.FindBy(x => x.SecretaryId == secretaryId));
         }
         
         [Route("api/secretary/update")]
         [HttpPut]
         [AllowAnonymous]
         // PUT: api/Secretary/5
-        public HttpResponseMessage Update(Secretary obj)
+        public IHttpActionResult Update(Secretary obj)
         {
             int tbleId = getTableId(obj.SecretaryId);
             obj.Id = tbleId;
 
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Update(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            _secretaryRepo.Edit(obj);
+            _unitOfWork.Commit();
+            return Ok(obj);
         }
 
         [Route("api/secretary/delete/{doctorid}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Secretary/5
-        public HttpResponseMessage Delete(string doctorid)
+        public IHttpActionResult Delete(string doctorid)
         {
             int tbleId = getTableId(doctorid);
-
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Delete(tbleId);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            _secretaryRepo.Delete(_secretaryRepo.GetSingle(tbleId));
+            _unitOfWork.Commit();
+            return Ok(doctorid);
         }
 
         private int getTableId(string secretaryId)
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
+            var result = _secretaryRepo.FindBy(x => x.SecretaryId == secretaryId).FirstOrDefault();
 
             return result.Id;
         }
