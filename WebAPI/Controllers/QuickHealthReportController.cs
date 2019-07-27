@@ -86,7 +86,6 @@ namespace WebAPI.Controllers
                     Mobile = _hospitalDetail.Mobile,
                     Email = _hospitalDetail.Email,
                     Website = _hospitalDetail.Website,
-                    FullName = _hospitalDetail.FullName
                 };
                 return Ok(_hospitalDetailsRepository.Insert(hospitalDetail));
             }

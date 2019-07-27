@@ -99,7 +99,6 @@ namespace WebAPI.Entity
         public int Mobile { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
-        public string FullName { get; set; }
         public string HospitalId { get; set; }
         public string EstablishYear { get; set; }
         public int NumberofBed { get; set; }

@@ -47,7 +47,7 @@ namespace WebAPI
                     isEmailConfirmed = hospitalDetails.EmailConfirmed;
                 } else {
                     clientDetailRepo = _clientDetailRepo.Find(x => x.ClientId.Trim() == user.Id.Trim()).FirstOrDefault();
-                    jobType = hospitalDetails.jobType;
+                    jobType = clientDetailRepo.Jobtype;
                     isEmailConfirmed = clientDetailRepo.EmailConfirmed;
                 }
                 if (!isEmailConfirmed)
