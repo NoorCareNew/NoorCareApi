@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 
-namespace WebAPI.Controllers
+namespace NoorCare.WebAPI.Controllers
 {
     public class FileUploadController : ApiController
     {

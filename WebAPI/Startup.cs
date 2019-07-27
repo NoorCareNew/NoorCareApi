@@ -7,7 +7,7 @@ using Microsoft.Owin.Security.OAuth;
 
 [assembly: OwinStartup(typeof(WebAPI.Startup))]
 
-namespace WebAPI
+namespace NoorCare.WebAPI
 {
     public class Startup
     {

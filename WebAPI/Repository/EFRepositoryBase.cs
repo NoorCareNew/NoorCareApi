@@ -79,7 +79,7 @@ namespace NoorCare.Repository
             {
                 this.GetSet().Add(model);
                 this.m_dbContext.SaveChanges();
-                IEntity<TKey> entity = model as IEntity<TKey>;
+                IEntityBase<TKey> entity = model as IEntityBase<TKey>;
                 return entity.Id;
             }
             catch (Exception ex)

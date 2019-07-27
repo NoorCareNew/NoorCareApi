@@ -1,29 +1,40 @@
-﻿using AngularJSAuthentication.API.Services;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using NoorCare.Repository;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
-using WebAPI.Services;
+using NoorCare.Data.Repositories;
 
-namespace WebAPI.Controllers
+namespace NoorCare.WebAPI.Controllers
 {
     public class AccountController : ApiController
     {
 
-        IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
-        IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
-        EmailSender _emailSender = new EmailSender();
+        //IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
+        //IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+        //EmailSender _emailSender = new EmailSender();
+
+        private readonly IEntityBaseRepository<Customer> _customersRepository;
+
+        public CustomersController(IEntityBaseRepository<Customer> customersRepository,
+            IEntityBaseRepository<Error> _errorsRepository, IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _customersRepository = customersRepository;
+        }
+
+        public AccountController(IMembershipService membershipService,
+             IEntityBaseRepository<Error> _errorsRepository, IUnitOfWork _unitOfWork)
+             : base(_errorsRepository, _unitOfWork)
+        {
+            _membershipService = membershipService;
+        }
+
         Registration _registration = new Registration();
         string tokenCode = "";
 
@@ -35,7 +46,7 @@ namespace WebAPI.Controllers
             ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             CountryCode countryCode = _countryCodeRepository.Find(x=>x.Id == model.CountryCode).FirstOrDefault();
 
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
             
             string clientId = _registration.creatIdPrix(model) + countryCode.CountryCodes + "-" + _emailSender.Get();
@@ -225,7 +236,7 @@ namespace WebAPI.Controllers
         [Route("api/user/changePassword")]
         public IHttpActionResult ChangePassword(ChangePassword model)
         {
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
             IdentityResult result = manager.ChangePassword(model.UserName, model.OldPassword, model.NewPassword);
             return Ok(result);
@@ -236,7 +247,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult ForgetPassword(ForgetPassword model)
         {
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
             ApplicationUser cUser = manager.FindByName(model.UserName);
             string hashedNewPassword = manager.PasswordHasher.HashPassword(model.NewPassword);
@@ -249,7 +260,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult GetUserNameEmailIdExit(AccountModel model)
         {
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
 
             return Ok(manager.FindByName(model.UserName));
@@ -260,7 +271,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult GetUserEmailId(AccountModel model)
         {
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
 
             return Ok(manager.FindByEmail(model.Email));

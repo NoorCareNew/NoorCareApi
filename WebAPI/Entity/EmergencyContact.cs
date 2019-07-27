@@ -1,13 +1,13 @@
-﻿using NoorCare;
+﻿using NoorCare.Entity;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebAPI.Entity
+namespace NoorCare.WebAPI.Entity
 {
     [Serializable]
     [Table("EmergencyContact")]
-    public class EmergencyContact : IEntity<int>
+    public class EmergencyContact : IEntityBase
     {
         [Key]
         public int Id { get; set; }

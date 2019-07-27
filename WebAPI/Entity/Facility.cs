@@ -1,4 +1,4 @@
-﻿using NoorCare;
+﻿using NoorCare.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,11 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace WebAPI.Entity
+namespace NoorCare.WebAPI.Entity
 {
     [Serializable]
     [Table("Facility")]
-    public class Facility : IEntity<int>
+    public class Facility : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("CountryCode")]
-    public class CountryCode : IEntity<int>
+    public class CountryCode : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -30,7 +30,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("TblCity")]
-    public class TblCity : IEntity<int>
+    public class TblCity : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -42,7 +42,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("TblCountry")]
-    public class TblCountry : IEntity<int>
+    public class TblCountry : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -51,7 +51,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("tblState")]
-    public class State : IEntity<int>
+    public class State : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -61,7 +61,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("InsuranceInformation")]
-    public class InsuranceInformation : IEntity<int>
+    public class InsuranceInformation : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -72,7 +72,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("QuickHeathDetails")]
-    public class QuickHeathDetails : IEntity<int>
+    public class QuickHeathDetails : IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -90,7 +90,7 @@ namespace WebAPI.Entity
 
     //[Serializable]
     //[Table("HospitalDetail")]
-    //public class HospitalDetail : IEntity<int>
+    //public class HospitalDetail : IEntityBase
     //{
     //    [Key]
     //    public int Id { get; set; }
@@ -113,7 +113,7 @@ namespace WebAPI.Entity
 
     [Serializable]
     [Table("QuickUpload")]
-    public class QuickUpload : IEntity<int>
+    public class QuickUpload : IEntityBase
     {
         [Key]
         public int Id { get; set; }

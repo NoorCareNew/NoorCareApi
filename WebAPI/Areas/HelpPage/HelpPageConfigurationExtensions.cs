@@ -9,7 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using WebAPI.Areas.HelpPage.Models;
 
-namespace WebAPI.Areas.HelpPage
+namespace NoorCare.WebAPI.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

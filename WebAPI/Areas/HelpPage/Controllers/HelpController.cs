@@ -3,7 +3,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using WebAPI.Areas.HelpPage.Models;
 
-namespace WebAPI.Areas.HelpPage.Controllers
+namespace NoorCare.WebAPI.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

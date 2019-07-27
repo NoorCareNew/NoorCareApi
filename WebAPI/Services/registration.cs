@@ -6,7 +6,7 @@ using WebAPI.Entity;
 using WebAPI.Models;
 using WebAPI.Repository;
 
-namespace WebAPI.Services
+namespace NoorCare.WebAPI.Services
 {
     public class Registration
     {
@@ -30,7 +30,7 @@ namespace WebAPI.Services
 
         public int AddHospitalDetail(string clientId, AccountModel model, IHospitalDetailsRepository _hospitalDetailsRepository)
         {
-            HospitalDetail _hospitalDetail = new HospitalDetail
+            HospitalDetails _hospitalDetail = new HospitalDetails
             {
                 HospitalId = clientId,
                 HospitalName = model.FirstName,

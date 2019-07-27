@@ -1,4 +1,4 @@
-using NoorCare;
+using NoorCare.Entity;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,9 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 [Serializable]
 [Table("ClientDetail")]
-public partial class ClientDetail : IEntity<int>
+public partial class ClientDetail : IEntityBase
 {
-    [Key]
     public int Id { get; set; }
     public string ClientId { get; set; }
     public string FirstName { get; set; }

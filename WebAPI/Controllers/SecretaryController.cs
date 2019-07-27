@@ -14,7 +14,7 @@ using WebAPI.Entity;
 using WebAPI.Models;
 using WebAPI.Repository;
 
-namespace WebAPI.Controllers
+namespace NoorCare.WebAPI.Controllers
 {
     public class SecretaryController : ApiController
     {
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
             ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
             EmailSender _emailSender = new EmailSender();
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
 
             string secretaryId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();

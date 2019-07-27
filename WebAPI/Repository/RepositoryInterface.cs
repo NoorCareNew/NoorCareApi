@@ -1,7 +1,7 @@
 ﻿using NoorCare.Repository;
 using WebAPI.Entity;
 
-namespace WebAPI.Repository
+namespace NoorCare.WebAPI.Repository
 {
     public interface IClientDetailRepository : IRepository<ClientDetail, int>{}
     public interface IFacilityRepository : IRepository<Facility, int>{}

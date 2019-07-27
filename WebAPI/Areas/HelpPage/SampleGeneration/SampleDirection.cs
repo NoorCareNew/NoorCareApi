@@ -1,4 +1,4 @@
-namespace WebAPI.Areas.HelpPage
+namespace NoorCare.WebAPI.Areas.HelpPage
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

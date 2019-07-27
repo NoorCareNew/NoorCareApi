@@ -1,11 +1,11 @@
-using NoorCare;
+using NoorCare.Entity;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Serializable]
 [Table("HospitalDetails")]
-public partial class HospitalDetails : IEntity<int>
+public partial class HospitalDetails : IEntityBase
 {
     [Key]
     public int Id { get; set; }

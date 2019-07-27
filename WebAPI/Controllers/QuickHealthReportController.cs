@@ -8,7 +8,7 @@ using System.Web.Http;
 using WebAPI.Entity;
 using WebAPI.Repository;
 
-namespace WebAPI.Controllers
+namespace NoorCare.WebAPI.Controllers
 {
     public class QuickHealthReportController : ApiController
     {

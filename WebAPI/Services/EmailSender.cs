@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Web;
 using WebAPI;
 
-namespace AngularJSAuthentication.API.Services
+namespace NoorCare.AngularJSAuthentication.API.Services
 {
     public class EmailSender
     {

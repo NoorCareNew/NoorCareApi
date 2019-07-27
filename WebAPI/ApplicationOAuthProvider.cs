@@ -12,7 +12,7 @@ using WebAPI.Entity;
 using WebAPI.Models;
 using WebAPI.Repository;
 
-namespace WebAPI
+namespace NoorCare.WebAPI
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
@@ -30,7 +30,7 @@ namespace WebAPI
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
             var userFindByEmail = manager.FindByEmail(context.UserName);
             var user = userFindByEmail != null ? await manager.FindAsync(userFindByEmail.UserName, context.Password)

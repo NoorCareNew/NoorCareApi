@@ -15,7 +15,7 @@ using WebAPI.Models;
 using WebAPI.Repository;
 using WebAPI.Services;
 
-namespace WebAPI.Controllers
+namespace NoorCare.WebAPI.Controllers
 {
     public class DoctorController : ApiController
     {
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
             ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
             EmailSender _emailSender = new EmailSender();
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
 
             string doctorId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();

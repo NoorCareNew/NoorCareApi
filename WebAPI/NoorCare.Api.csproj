@@ -190,6 +190,7 @@
     <Compile Include="Controllers\FacilityController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HospitalDetailsController.cs" />
     <Compile Include="Controllers\QuickHealthReportController.cs" />
     <Compile Include="Controllers\SecretaryController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -199,21 +200,23 @@
     <Compile Include="Entity\ClientDetail.cs" />
     <Compile Include="Entity\Disease.cs" />
     <Compile Include="Entity\Facility.cs" />
-    <Compile Include="Entity\IEntity.cs" />
+    <Compile Include="Entity\HospitalDetails.cs" />
+    <Compile Include="Entity\IEntityBase.cs" />
     <Compile Include="Entity\MedicalInformation.cs" />
     <Compile Include="Entity\Secretary.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\DbFactory.cs" />
+    <Compile Include="Infrastructure\Disposable.cs" />
+    <Compile Include="Infrastructure\IDbFactory.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\ContextTypes.cs" />
-    <Compile Include="Repository\EFRepositoryBase.cs" />
-    <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Repository\Repository.cs" />
-    <Compile Include="Repository\RepositoryFactory.cs" />
-    <Compile Include="Repository\RepositoryInterface.cs" />
+    <Compile Include="Repository\EntityBaseRepository.cs" />
+    <Compile Include="Repository\IEntityBaseRepository.cs" />
     <Compile Include="Services\EmailSender.cs" />
     <Compile Include="Services\Registration.cs" />
     <Compile Include="Startup.cs" />

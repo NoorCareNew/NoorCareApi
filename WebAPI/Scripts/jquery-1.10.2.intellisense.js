@@ -121,7 +121,7 @@ intellisense.annotate(jQuery, {
   'extend': function() {
     /// <signature>
     ///   <summary>Merge the contents of two or more objects together into the first object.</summary>
-    ///   <param name="target" type="Object">An object that will receive the new properties if additional objects are passed in or that will extend the jQuery namespace if it is the sole argument.</param>
+    ///   <param name="target" type="Object">An object that will receive the new properties if additional objects are passed in or that will extend the jQuery namespace NoorCare.if it is the sole argument.</param>
     ///   <param name="object1" type="Object">An object containing additional properties to merge in.</param>
     ///   <param name="objectN" type="Object">Additional objects containing properties to merge in.</param>
     ///   <returns type="Object" />
@@ -668,8 +668,8 @@ intellisense.annotate(jQuery.Event.prototype, {
     /// <summary>Indicates whether the META key was pressed when the event fired.</summary>
     /// <returns type="Boolean" />
   },
-  'namespace': function() {
-    /// <summary>The namespace specified when the event was triggered.</summary>
+  'namespace NoorCare.': function() {
+    /// <summary>The namespace NoorCare.specified when the event was triggered.</summary>
     /// <returns type="String" />
   },
   'pageX': function() {
@@ -1922,14 +1922,14 @@ intellisense.annotate(jQuery.fn, {
   'off': function() {
     /// <signature>
     ///   <summary>Remove an event handler.</summary>
-    ///   <param name="events" type="String">One or more space-separated event types and optional namespaces, or just namespaces, such as "click", "keydown.myPlugin", or ".myPlugin".</param>
+    ///   <param name="events" type="String">One or more space-separated event types and optional namespace NoorCare.s, or just namespace NoorCare.s, such as "click", "keydown.myPlugin", or ".myPlugin".</param>
     ///   <param name="selector" type="String">A selector which should match the one originally passed to .on() when attaching event handlers.</param>
     ///   <param name="handler(eventObject)" type="Function">A handler function previously attached for the event(s), or the special value false.</param>
     ///   <returns type="jQuery" />
     /// </signature>
     /// <signature>
     ///   <summary>Remove an event handler.</summary>
-    ///   <param name="events" type="PlainObject">An object where the string keys represent one or more space-separated event types and optional namespaces, and the values represent handler functions previously attached for the event(s).</param>
+    ///   <param name="events" type="PlainObject">An object where the string keys represent one or more space-separated event types and optional namespace NoorCare.s, and the values represent handler functions previously attached for the event(s).</param>
     ///   <param name="selector" type="String">A selector which should match the one originally passed to .on() when attaching event handlers.</param>
     ///   <returns type="jQuery" />
     /// </signature>
@@ -1953,7 +1953,7 @@ intellisense.annotate(jQuery.fn, {
   'on': function() {
     /// <signature>
     ///   <summary>Attach an event handler function for one or more events to the selected elements.</summary>
-    ///   <param name="events" type="String">One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".</param>
+    ///   <param name="events" type="String">One or more space-separated event types and optional namespace NoorCare.s, such as "click" or "keydown.myPlugin".</param>
     ///   <param name="selector" type="String">A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.</param>
     ///   <param name="data" type="Anything">Data to be passed to the handler in event.data when an event is triggered.</param>
     ///   <param name="handler(eventObject)" type="Function">A function to execute when the event is triggered. The value false is also allowed as a shorthand for a function that simply does return false.</param>
@@ -1961,7 +1961,7 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
     /// <signature>
     ///   <summary>Attach an event handler function for one or more events to the selected elements.</summary>
-    ///   <param name="events" type="PlainObject">An object in which the string keys represent one or more space-separated event types and optional namespaces, and the values represent a handler function to be called for the event(s).</param>
+    ///   <param name="events" type="PlainObject">An object in which the string keys represent one or more space-separated event types and optional namespace NoorCare.s, and the values represent a handler function to be called for the event(s).</param>
     ///   <param name="selector" type="String">A selector string to filter the descendants of the selected elements that will call the handler. If the selector is null or omitted, the handler is always called when it reaches the selected element.</param>
     ///   <param name="data" type="Anything">Data to be passed to the handler in event.data when an event occurs.</param>
     ///   <returns type="jQuery" />
@@ -1977,7 +1977,7 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
     /// <signature>
     ///   <summary>Attach a handler to an event for the elements. The handler is executed at most once per element.</summary>
-    ///   <param name="events" type="String">One or more space-separated event types and optional namespaces, such as "click" or "keydown.myPlugin".</param>
+    ///   <param name="events" type="String">One or more space-separated event types and optional namespace NoorCare.s, such as "click" or "keydown.myPlugin".</param>
     ///   <param name="selector" type="String">A selector string to filter the descendants of the selected elements that trigger the event. If the selector is null or omitted, the event is always triggered when it reaches the selected element.</param>
     ///   <param name="data" type="Anything">Data to be passed to the handler in event.data when an event is triggered.</param>
     ///   <param name="handler(eventObject)" type="Function">A function to execute when the event is triggered. The value false is also allowed as a shorthand for a function that simply does return false.</param>
@@ -1985,7 +1985,7 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
     /// <signature>
     ///   <summary>Attach a handler to an event for the elements. The handler is executed at most once per element.</summary>
-    ///   <param name="events" type="PlainObject">An object in which the string keys represent one or more space-separated event types and optional namespaces, and the values represent a handler function to be called for the event(s).</param>
+    ///   <param name="events" type="PlainObject">An object in which the string keys represent one or more space-separated event types and optional namespace NoorCare.s, and the values represent a handler function to be called for the event(s).</param>
     ///   <param name="selector" type="String">A selector string to filter the descendants of the selected elements that will call the handler. If the selector is null or omitted, the handler is always called when it reaches the selected element.</param>
     ///   <param name="data" type="Anything">Data to be passed to the handler in event.data when an event occurs.</param>
     ///   <returns type="jQuery" />
@@ -2557,7 +2557,7 @@ intellisense.annotate(jQuery.fn, {
     /// </signature>
     /// <signature>
     ///   <summary>Remove a handler from the event for all elements which match the current selector, based upon a specific set of root elements.</summary>
-    ///   <param name="namespace" type="String">A string containing a namespace to unbind all events from.</param>
+    ///   <param name="namespace NoorCare." type="String">A string containing a namespace NoorCare.to unbind all events from.</param>
     ///   <returns type="jQuery" />
     /// </signature>
   },

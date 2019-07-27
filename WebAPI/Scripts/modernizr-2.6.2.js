@@ -849,7 +849,7 @@ window.Modernizr = (function( window, document, undefined ) {
     tests['inlinesvg'] = function() {
       var div = document.createElement('div');
       div.innerHTML = '<svg/>';
-      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
+      return (div.firstChild && div.firstChild.namespace NoorCare.URI) == ns.svg;
     };
 
     // SVG SMIL animation

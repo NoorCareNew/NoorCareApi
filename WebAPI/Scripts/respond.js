@@ -46,7 +46,7 @@ window.matchMedia = window.matchMedia || (function(doc, undefined){
 
 /*! Respond.js v1.2.0: min/max-width media query polyfill. (c) Scott Jehl. MIT/GPLv2 Lic. j.mp/respondjs  */
 (function( win ){
-	//exposed namespace
+	//exposed namespace NoorCare.
 	win.respond		= {};
 	
 	//define update even in native-mq-supporting browsers, to avoid errors
