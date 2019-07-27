@@ -1,20 +1,40 @@
-﻿using NoorCare.Repository;
+﻿using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Repository;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class FacilityController : ApiController
+    public class FacilityController : ApiControllerBase
     {
+        private readonly IEntityBaseRepository<Facility> _facilityDetailRepo;
+        private readonly IEntityBaseRepository<Disease> _diseaseDetailRepo;
+        private readonly IEntityBaseRepository<TblCity> _cityRepository;
+        private readonly IEntityBaseRepository<TblCountry> _countryRepository;
+        private readonly IEntityBaseRepository<CountryCode> _countryCodeRepository;
+        public FacilityController(IEntityBaseRepository<Facility> facilityDetailRepo,
+                                    IEntityBaseRepository<Disease> diseaseDetailRepo,
+                                    IEntityBaseRepository<TblCity> cityRepository,
+                                    IEntityBaseRepository<TblCountry> countryRepository,
+                                    IEntityBaseRepository<CountryCode> countryCodeRepository,
+        IEntityBaseRepository<Error> _errorsRepository,
+                                    IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _facilityDetailRepo = facilityDetailRepo;
+            _diseaseDetailRepo = diseaseDetailRepo;
+            _cityRepository = cityRepository;
+            _countryRepository = countryRepository;
+            _countryCodeRepository = countryCodeRepository;
+        }
         [Route("api/facility")]
         [HttpGet]
         [AllowAnonymous]
         public List<Facility> GetFacility()
         {
-            IFacilityRepository _facilityDetailRepo = RepositoryFactory.Create<IFacilityRepository>(ContextTypes.EntityFramework);
             return _facilityDetailRepo.GetAll().ToList();
         }
 
@@ -23,7 +43,6 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public List<Disease> GetDisease()
         {
-            IDiseaseRepository _diseaseDetailRepo = RepositoryFactory.Create<IDiseaseRepository>(ContextTypes.EntityFramework);
             return _diseaseDetailRepo.GetAll().ToList();
         }
 
@@ -32,7 +51,6 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public List<CountryCode> GetCountryCode()
         {
-            ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             return _countryCodeRepository.GetAll().ToList();
         }
 
@@ -41,8 +59,7 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public List<TblCity> GetCity(int countryId)
         {
-            ICityRepository _cityRepository = RepositoryFactory.Create<ICityRepository>(ContextTypes.EntityFramework);
-            return _cityRepository.Find(x=>x.CountryId == countryId).ToList();
+            return _cityRepository.FindBy(x=>x.CountryId == countryId).ToList();
         }
 
         [Route("api/countries")]
@@ -50,18 +67,7 @@ namespace NoorCare.WebAPI.Controllers
         [AllowAnonymous]
         public List<TblCountry> GetCountries()
         {
-            ICountryRepository _cityRepository = RepositoryFactory.Create<ICountryRepository>(ContextTypes.EntityFramework);
-            return _cityRepository.GetAll().ToList();
+            return _countryRepository.GetAll().ToList();
         }
-
-        [Route("api/state")]
-        [HttpGet]
-        [AllowAnonymous]
-        public List<State> GetState()
-        {
-            IStateRepository _stateRepository = RepositoryFactory.Create<IStateRepository>(ContextTypes.EntityFramework);
-            return _stateRepository.GetAll().ToList();
-        }
-
     }
 }

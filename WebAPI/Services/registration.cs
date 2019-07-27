@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
+﻿using NoorCare.WebAPI.Models;
+using System;
 
 namespace NoorCare.WebAPI.Services
 {
     public class Registration
     {
-        public int AddClientDetail(string clientId, AccountModel model, IClientDetailRepository _clientDetailRepo)
+        public ClientDetail ClientDetail(string clientId, AccountModel model)
         {
             ClientDetail _clientDetail = new ClientDetail
             {
@@ -25,10 +20,10 @@ namespace NoorCare.WebAPI.Services
                 CountryCode = model.CountryCode,
                 CreatedDate = DateTime.Now,
             };
-           return _clientDetailRepo.Insert(_clientDetail);
+            return _clientDetail;
         }
 
-        public int AddHospitalDetail(string clientId, AccountModel model, IHospitalDetailsRepository _hospitalDetailsRepository)
+        public HospitalDetails HospitalDetail(string clientId, AccountModel model)
         {
             HospitalDetails _hospitalDetail = new HospitalDetails
             {
@@ -39,7 +34,7 @@ namespace NoorCare.WebAPI.Services
                 Mobile = Convert.ToInt32(model.PhoneNumber),
                 FacilityId = model.FacilityId
             };
-            return _hospitalDetailsRepository.Insert(_hospitalDetail);
+            return _hospitalDetail;
         }
 
         public string creatIdPrix(AccountModel model)

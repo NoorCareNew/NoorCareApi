@@ -1,11 +1,11 @@
-﻿using System;
+﻿using NoorCare.WebAPI;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
-using WebAPI;
 
-namespace NoorCare.AngularJSAuthentication.API.Services
+namespace NoorCare.API.Services
 {
     public class EmailSender
     {

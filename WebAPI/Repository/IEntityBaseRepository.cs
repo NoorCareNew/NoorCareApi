@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace NoorCare.Data.Repositories
 {
-    public interface IEntityBaseBaseRepository<T>  where T : class, IEntityBase, new()
+    public interface IEntityBaseRepository<T>  where T : class, IEntityBase, new()
     {
         IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
         IQueryable<T> All { get; }

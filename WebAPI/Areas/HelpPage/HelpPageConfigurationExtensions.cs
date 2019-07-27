@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
-using WebAPI.Areas.HelpPage.Models;
+using NoorCare.WebAPI.Areas.HelpPage.Models;
 
 namespace NoorCare.WebAPI.Areas.HelpPage
 {

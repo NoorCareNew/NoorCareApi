@@ -1,7 +1,7 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using WebAPI.Areas.HelpPage.Models;
+using NoorCare.WebAPI.Areas.HelpPage.Models;
 
 namespace NoorCare.WebAPI.Areas.HelpPage.Controllers
 {

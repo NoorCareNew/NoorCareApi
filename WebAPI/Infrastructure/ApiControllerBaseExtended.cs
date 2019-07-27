@@ -1,6 +1,7 @@
-﻿using HomeCinema.Data.Infrastructure;
-using HomeCinema.Data.Repositories;
-using HomeCinema.Entities;
+﻿using NoorCare.Data.Infrastructure;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Core;
+using NoorCare.WebAPI.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -9,9 +10,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using HomeCinema.Web.Infrastructure.Extensions;
 
-namespace HomeCinema.Web.Infrastructure.Core
+namespace NoorCare.Web.Infrastructure.Core
 {
     public class ApiControllerBaseExtended : ApiController
     {
@@ -19,10 +19,6 @@ namespace HomeCinema.Web.Infrastructure.Core
 
         protected readonly IDataRepositoryFactory _dataRepositoryFactory;
         protected IEntityBaseRepository<Error> _errorsRepository;
-        protected IEntityBaseRepository<Movie> _moviesRepository;
-        protected IEntityBaseRepository<Rental> _rentalsRepository;
-        protected IEntityBaseRepository<Stock> _stocksRepository;
-        protected IEntityBaseRepository<Customer> _customersRepository;
         protected IUnitOfWork _unitOfWork;
 
         private HttpRequestMessage RequestMessage;
@@ -61,30 +57,30 @@ namespace HomeCinema.Web.Infrastructure.Core
         {
             _errorsRepository = _dataRepositoryFactory.GetDataRepository<Error>(RequestMessage);
 
-            if (entities.Any(e => e.FullName == typeof(Movie).FullName))
-            {
-                _moviesRepository = _dataRepositoryFactory.GetDataRepository<Movie>(RequestMessage);
-            }
+            //if (entities.Any(e => e.FullName == typeof(Movie).FullName))
+            //{
+            //    _moviesRepository = _dataRepositoryFactory.GetDataRepository<Movie>(RequestMessage);
+            //}
 
-            if (entities.Any(e => e.FullName == typeof(Rental).FullName))
-            {
-                _rentalsRepository = _dataRepositoryFactory.GetDataRepository<Rental>(RequestMessage);
-            }
+            //if (entities.Any(e => e.FullName == typeof(Rental).FullName))
+            //{
+            //    _rentalsRepository = _dataRepositoryFactory.GetDataRepository<Rental>(RequestMessage);
+            //}
 
-            if (entities.Any(e => e.FullName == typeof(Customer).FullName))
-            {
-                _customersRepository = _dataRepositoryFactory.GetDataRepository<Customer>(RequestMessage);
-            }
+            //if (entities.Any(e => e.FullName == typeof(Customer).FullName))
+            //{
+            //    _customersRepository = _dataRepositoryFactory.GetDataRepository<Customer>(RequestMessage);
+            //}
 
-            if (entities.Any(e => e.FullName == typeof(Stock).FullName))
-            {
-                _stocksRepository = _dataRepositoryFactory.GetDataRepository<Stock>(RequestMessage);
-            }
+            //if (entities.Any(e => e.FullName == typeof(Stock).FullName))
+            //{
+            //    _stocksRepository = _dataRepositoryFactory.GetDataRepository<Stock>(RequestMessage);
+            //}
 
-            if (entities.Any(e => e.FullName == typeof(User).FullName))
-            {
-                _stocksRepository = _dataRepositoryFactory.GetDataRepository<Stock>(RequestMessage);
-            }
+            //if (entities.Any(e => e.FullName == typeof(User).FullName))
+            //{
+            //    _stocksRepository = _dataRepositoryFactory.GetDataRepository<Stock>(RequestMessage);
+            //}
         }
 
         private void LogError(Exception ex)

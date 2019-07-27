@@ -4,8 +4,9 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.OAuth;
+using NoorCare.Data.Repositories;
 
-[assembly: OwinStartup(typeof(WebAPI.Startup))]
+[assembly: OwinStartup(typeof(NoorCare.WebAPI.Startup))]
 
 namespace NoorCare.WebAPI
 {
@@ -14,7 +15,7 @@ namespace NoorCare.WebAPI
         public void Configuration(IAppBuilder app)
         {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
-
+             
             app.UseCors(CorsOptions.AllowAll);
 
             OAuthAuthorizationServerOptions option = new OAuthAuthorizationServerOptions

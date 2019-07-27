@@ -9,42 +9,44 @@ using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 using NoorCare.Data.Repositories;
+using NoorCare.WebAPI.Services;
+using NoorCare.WebAPI.Models;
+using NoorCare.WebAPI.Entity;
+using NoorCare.API.Services;
+using NoorCare.Data.Infrastructure;
+using NoorCare.Web.Infrastructure.Core;
 
 namespace NoorCare.WebAPI.Controllers
 {
-    public class AccountController : ApiController
+    public class AccountController : ApiControllerBase
     {
-
-        //IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
-        //IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
-        //EmailSender _emailSender = new EmailSender();
-
-        private readonly IEntityBaseRepository<Customer> _customersRepository;
-
-        public CustomersController(IEntityBaseRepository<Customer> customersRepository,
-            IEntityBaseRepository<Error> _errorsRepository, IUnitOfWork _unitOfWork)
-            : base(_errorsRepository, _unitOfWork)
-        {
-            _customersRepository = customersRepository;
-        }
-
-        public AccountController(IMembershipService membershipService,
-             IEntityBaseRepository<Error> _errorsRepository, IUnitOfWork _unitOfWork)
-             : base(_errorsRepository, _unitOfWork)
-        {
-            _membershipService = membershipService;
-        }
-
+        EmailSender _emailSender = new EmailSender();
         Registration _registration = new Registration();
         string tokenCode = "";
+        private readonly IEntityBaseRepository<ClientDetail> _clientDetailRepository;
+        private readonly IEntityBaseRepository<HospitalDetails> _hospitalDetailsRepository;
+        private readonly IEntityBaseRepository<CountryCode> _countryCodeRepository;
+
+        public AccountController(IEntityBaseRepository<ClientDetail> clientDetailRepository,
+                                    IEntityBaseRepository<HospitalDetails> hospitalDetailsRepository,
+                                    IEntityBaseRepository<CountryCode> countryCodeRepository,
+                                    IEntityBaseRepository<Error> _errorsRepository,
+                                    IUnitOfWork _unitOfWork)
+            : base(_errorsRepository, _unitOfWork)
+        {
+            _clientDetailRepository = clientDetailRepository;
+            _hospitalDetailsRepository = hospitalDetailsRepository;
+            _countryCodeRepository = countryCodeRepository;
+        }
+
+      
 
         [Route("api/account/register")]
         [HttpPost]
         [AllowAnonymous]
         public string Register(AccountModel model)
         {
-            ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
-            CountryCode countryCode = _countryCodeRepository.Find(x=>x.Id == model.CountryCode).FirstOrDefault();
+            CountryCode countryCode = _countryCodeRepository.FindBy(x=>x.Id == model.CountryCode).FirstOrDefault();
 
             var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
@@ -67,11 +69,13 @@ namespace NoorCare.WebAPI.Controllers
             {
                 if (model.jobType == 1)
                 {
-                    _registration.AddClientDetail(clientId, model, _clientDetailRepo);
+                    _clientDetailRepository.Add(_registration.ClientDetail(clientId, model));
+                    _unitOfWork.Commit();
                 }
                 else if (model.jobType == 2)
                 {
-                    _registration.AddHospitalDetail(clientId, model, _hospitalDetailsRepository);
+                    _hospitalDetailsRepository.Add(_registration.HospitalDetail(clientId, model));
+                    _unitOfWork.Commit();
                 }
                 try
                 {
@@ -87,7 +91,7 @@ namespace NoorCare.WebAPI.Controllers
                         "has been sent your eamil id: " + 
                             model.Email;
         }
-    
+
         private IHttpActionResult GetErrorResult(IdentityResult result)
         {
             if (result == null)
@@ -139,9 +143,9 @@ namespace NoorCare.WebAPI.Controllers
         private void createDocPath(string clientId, int desiesId)
         {
             string subPath = $"ProfilePic/{clientId}";
-            bool exists = System.IO.Directory.Exists(HttpContext.Current.Server.MapPath(subPath));
+            bool exists = Directory.Exists(HttpContext.Current.Server.MapPath(subPath));
             if (!exists)
-                System.IO.Directory.CreateDirectory(HttpContext.Current.Server.MapPath(subPath));
+                Directory.CreateDirectory(HttpContext.Current.Server.MapPath(subPath));
         }
 
         [HttpPost]
@@ -174,35 +178,37 @@ namespace NoorCare.WebAPI.Controllers
             catch (Exception)
             {
             }
-            
-            ClientDetail clientDetail = _clientDetailRepo.Find(p => p.ClientId == clientId).FirstOrDefault();
-            clientDetail.FirstName = httpRequest.Form["FirstName"] == null ? clientDetail.FirstName: httpRequest.Form["FirstName"];
-            clientDetail.LastName = httpRequest.Form["LastName"] == null ? clientDetail.LastName : httpRequest.Form["LastName"];
-            clientDetail.PinCode = httpRequest.Form["PinCode"] == null ? clientDetail.PinCode : Convert.ToInt16(httpRequest.Form["PinCode"]);
-            clientDetail.Gender = httpRequest.Form["Gender"] == null ? clientDetail.Gender : Convert.ToInt16(httpRequest.Form["Gender"]);
-            clientDetail.Address = httpRequest.Form["Address"] == null ? clientDetail.Address : httpRequest.Form["Address"];
-            clientDetail.City = httpRequest.Form["City"] == null ? clientDetail.City : httpRequest.Form["City"];
-            clientDetail.State = httpRequest.Form["State"] == null ? clientDetail.State : httpRequest.Form["State"];
-            clientDetail.Country = httpRequest.Form["Country"] == null ? clientDetail.Country : httpRequest.Form["Country"];
-            clientDetail.MobileNo = httpRequest.Form["MobileNo"] == null ? clientDetail.MobileNo : Convert.ToInt32(httpRequest.Form["MobileNo"]);
-            clientDetail.EmailId = httpRequest.Form["EmailId"] == null ? clientDetail.EmailId : httpRequest.Form["EmailId"];
-            clientDetail.MaritalStatus = httpRequest.Form["MaritalStatus"]== null ? clientDetail.MaritalStatus : Convert.ToInt16(httpRequest.Form["MaritalStatus"]);
-            clientDetail.DOB = httpRequest.Form["DOB"]== null ? clientDetail.DOB :httpRequest.Form["DOB"];
-            return Ok(_clientDetailRepo.Update(clientDetail));
+
+            ClientDetail _clientDetail = _clientDetailRepository.FindBy(p => p.ClientId == clientId).FirstOrDefault();
+            _clientDetail.FirstName = httpRequest.Form["FirstName"] == null ? _clientDetail.FirstName : httpRequest.Form["FirstName"];
+            _clientDetail.LastName = httpRequest.Form["LastName"] == null ? _clientDetail.LastName : httpRequest.Form["LastName"];
+            _clientDetail.PinCode = httpRequest.Form["PinCode"] == null ? _clientDetail.PinCode : Convert.ToInt16(httpRequest.Form["PinCode"]);
+            _clientDetail.Gender = httpRequest.Form["Gender"] == null ? _clientDetail.Gender : Convert.ToInt16(httpRequest.Form["Gender"]);
+            _clientDetail.Address = httpRequest.Form["Address"] == null ? _clientDetail.Address : httpRequest.Form["Address"];
+            _clientDetail.City = httpRequest.Form["City"] == null ? _clientDetail.City : httpRequest.Form["City"];
+            _clientDetail.State = httpRequest.Form["State"] == null ? _clientDetail.State : httpRequest.Form["State"];
+            _clientDetail.Country = httpRequest.Form["Country"] == null ? _clientDetail.Country : httpRequest.Form["Country"];
+            _clientDetail.MobileNo = httpRequest.Form["MobileNo"] == null ? _clientDetail.MobileNo : Convert.ToInt32(httpRequest.Form["MobileNo"]);
+            _clientDetail.EmailId = httpRequest.Form["EmailId"] == null ? _clientDetail.EmailId : httpRequest.Form["EmailId"];
+            _clientDetail.MaritalStatus = httpRequest.Form["MaritalStatus"] == null ? _clientDetail.MaritalStatus : Convert.ToInt16(httpRequest.Form["MaritalStatus"]);
+            _clientDetail.DOB = httpRequest.Form["DOB"] == null ? _clientDetail.DOB : httpRequest.Form["DOB"];
+            _clientDetailRepository.Edit(_clientDetail);
+            _unitOfWork.Commit();
+            return Ok();
         }
 
         [HttpGet]
         [Route("api/user/profile/{ClientId}")]
         public IHttpActionResult getProfileData(string ClientId)
         {
-            return Ok(_clientDetailRepo.Find(x =>x.ClientId == ClientId));
+            return Ok(_clientDetailRepository.FindBy(x => x.ClientId == ClientId));
         }
 
         [HttpGet]
         [Route("api/hospital/profile/{ClientId}")]
         public IHttpActionResult gethospitalData(string ClientId)
         {
-            return Ok(_hospitalDetailsRepository.Find(x => x.HospitalId == ClientId));
+            return Ok(_hospitalDetailsRepository.FindBy(x => x.HospitalId == ClientId));
         }
 
         [HttpGet]
@@ -212,23 +218,24 @@ namespace NoorCare.WebAPI.Controllers
         {
             if (userName.Contains("NCH"))
             {
-                HospitalDetails hospitalDetails = _hospitalDetailsRepository.Find(x => x.HospitalId.Trim() == userName.Trim()).FirstOrDefault();
+                HospitalDetails hospitalDetails = _hospitalDetailsRepository.FindBy(x => x.HospitalId.Trim() == userName.Trim()).FirstOrDefault();
                 if (hospitalDetails != null)
                 {
                     hospitalDetails.EmailConfirmed = true;
-                    return Ok(_hospitalDetailsRepository.Update(hospitalDetails));
+                    _hospitalDetailsRepository.Edit(hospitalDetails);
+                    _unitOfWork.Commit();
                 }
             }
             else
             {
-                ClientDetail clientDetail = _clientDetailRepo.Find(p => p.ClientId == userName).FirstOrDefault();
+                ClientDetail clientDetail = _clientDetailRepository.FindBy(p => p.ClientId == userName).FirstOrDefault();
                 if (clientDetail != null)
                 {
                     clientDetail.EmailConfirmed = true;
-                    return Ok(_clientDetailRepo.Update(clientDetail));
+                    _clientDetailRepository.Edit(clientDetail);
+                    _unitOfWork.Commit();
                 }
             }
-            
             return Ok();
         }
 
@@ -262,7 +269,6 @@ namespace NoorCare.WebAPI.Controllers
         {
             var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-
             return Ok(manager.FindByName(model.UserName));
         }
 
@@ -273,7 +279,6 @@ namespace NoorCare.WebAPI.Controllers
         {
             var userStore = new UserStore<ApplicationUser>(new NoorCareDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-
             return Ok(manager.FindByEmail(model.Email));
         }
     }

@@ -1,23 +1,29 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security.OAuth;
-using NoorCare.Repository;
+using NoorCare.Data.Repositories;
+using NoorCare.WebAPI.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
 
 namespace NoorCare.WebAPI
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
-        IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+        //IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
+        //IHospitalDetailsRepository _hospitalDetailsRepository = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+
+        private readonly IEntityBaseRepository<ClientDetail> _clientDetailRepo;
+        private readonly IEntityBaseRepository<HospitalDetails> _hospitalDetailsRepository;
+
+        //ApplicationOAuthProvider(IEntityBaseRepository<ClientDetail> clientDetailRepo,
+        //                            IEntityBaseRepository<HospitalDetails> hospitalDetailsRepository)
+        //{
+        //    _clientDetailRepo = clientDetailRepo;
+        //    _hospitalDetailsRepository = hospitalDetailsRepository;
+        //}
 
         ClientDetail clientDetailRepo = null;
         HospitalDetails hospitalDetails;
@@ -42,11 +48,11 @@ namespace NoorCare.WebAPI
             else
             {
                 if (user.Id.Contains("NCH")) {
-                    hospitalDetails = _hospitalDetailsRepository.Find(x => x.HospitalId.Trim() == user.Id.Trim()).FirstOrDefault();
+                    hospitalDetails = _hospitalDetailsRepository.FindBy(x => x.HospitalId.Trim() == user.Id.Trim()).FirstOrDefault();
                     jobType = hospitalDetails.jobType;
                     isEmailConfirmed = hospitalDetails.EmailConfirmed;
                 } else {
-                    clientDetailRepo = _clientDetailRepo.Find(x => x.ClientId.Trim() == user.Id.Trim()).FirstOrDefault();
+                    clientDetailRepo = _clientDetailRepo.FindBy(x => x.ClientId.Trim() == user.Id.Trim()).FirstOrDefault();
                     jobType = clientDetailRepo.Jobtype;
                     isEmailConfirmed = clientDetailRepo.EmailConfirmed;
                 }

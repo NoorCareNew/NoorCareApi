@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace NoorCare.Data.Repositories
 {
-    public class EntityBaseRepository<T> : IEntityBaseBaseRepository<T>
+    public class EntityBaseRepository<T> : IEntityBaseRepository<T>
             where T : class, IEntityBase, new()
     {
 

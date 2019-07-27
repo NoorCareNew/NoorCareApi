@@ -1,16 +1,9 @@
-﻿using HomeCinema.Data.Repositories;
-using HomeCinema.Web.App_Start;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Autofac;
-using System.Web.Http;
-using HomeCinema.Web.Infrastructure.Extensions;
-using System.Net.Http;
-using HomeCinema.Entities;
+﻿using System.Net.Http;
+using NoorCare.Entity;
+using NoorCare.Data.Repositories;
+using NoorCare.Web.Infrastructure.Extensions;
 
-namespace HomeCinema.Web.Infrastructure.Core
+namespace NoorCare.Web.Infrastructure.Core
 {
     public class DataRepositoryFactory : IDataRepositoryFactory
     {
