@@ -19,6 +19,7 @@ namespace WebAPI.Controllers
 {
     public class DoctorController : ApiController
     {
+        Registration _registration = new Registration();
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -54,15 +55,15 @@ namespace WebAPI.Controllers
             EmailSender _emailSender = new EmailSender();
             var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-
-            string doctorId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
-
-            obj.DoctorId = doctorId;
-
-
+            string password = _registration.RandomPassword(6);
+            ApplicationUser user = _registration.UserAcoount(obj);
+            IdentityResult result = manager.Create(user, password);
+            user.PasswordHash = password;
+            _registration.sendRegistrationEmail(user);
+            obj.DoctorId = user.Id;
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result = _doctorRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            var _doctorCreated = _doctorRepo.Insert(obj);
+            return Request.CreateResponse(HttpStatusCode.Accepted, obj.DoctorId);
         }
 
         [HttpPost]
@@ -140,24 +141,6 @@ namespace WebAPI.Controllers
             var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
 
             return result.Id;
-        }
-
-        public string creatIdPrix(Doctor model)
-        {
-            string priFix = "NCM-";
-            if (model.jobType == 2)
-            {
-                priFix = "NCH-";
-            }
-            else if (model.Gender == 1 && model.jobType == 3)
-            {
-                priFix = "NCM-";
-            }
-            else if (model.Gender == 2 && model.jobType == 3)
-            {
-                priFix = "NCF-";
-            }
-            return priFix;
         }
     }
 }

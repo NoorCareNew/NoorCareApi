@@ -13,11 +13,14 @@ using System.Web.Http;
 using WebAPI.Entity;
 using WebAPI.Models;
 using WebAPI.Repository;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
     public class SecretaryController : ApiController
     {
+
+        Registration _registration = new Registration();
         [Route("api/secretary/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -52,13 +55,15 @@ namespace WebAPI.Controllers
             EmailSender _emailSender = new EmailSender();
             var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-
-            string secretaryId = creatIdPrix(obj) + countryCode.CountryCodes + "-" + _emailSender.Get();
-
-            obj.SecretaryId = secretaryId;
+            string password = _registration.RandomPassword(6);
+            ApplicationUser user = _registration.UserAcoount(obj);
+            IdentityResult result = manager.Create(user, password);
+            user.PasswordHash = password;
+            _registration.sendRegistrationEmail(user);
+            obj.SecretaryId = user.Id;
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            var _sectiryCreated = _secretaryRepo.Insert(obj);
+            return Request.CreateResponse(HttpStatusCode.Accepted, obj.SecretaryId);
         }
 
         [HttpPost]
@@ -136,24 +141,6 @@ namespace WebAPI.Controllers
             var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
 
             return result.Id;
-        }
-
-        public string creatIdPrix(Secretary model)
-        {
-            string priFix = "NCM-";
-            if (model.jobType == 2)
-            {
-                priFix = "NCH-";
-            }
-            else if (model.Gender == 1 && model.jobType == 3)
-            {
-                priFix = "NCM-";
-            }
-            else if (model.Gender == 2 && model.jobType == 3)
-            {
-                priFix = "NCF-";
-            }
-            return priFix;
         }
     }
 }

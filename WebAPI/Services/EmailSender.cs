@@ -10,7 +10,7 @@ namespace AngularJSAuthentication.API.Services
     public class EmailSender
     {
         public void email_send(string mailTo = "manishcs0019@gmail.com", string clientName = "Manish Sharma", 
-            string ClientId = "Test")
+            string ClientId = "Test", int jobType = 0, string password = null)
         {
             string html = File.ReadAllText(HttpContext.Current.Server.MapPath("~/Services/templat.html"));
             MailMessage mail = new MailMessage();
@@ -19,9 +19,10 @@ namespace AngularJSAuthentication.API.Services
             mail.To.Add(mailTo);
             mail.IsBodyHtml = true;
             mail.Subject = "Registration Successfully ";
-            mail.Body = html.Replace("CLIENTNAME", clientName +"("+ ClientId + ")");
+            mail.Body = html.Replace("CLIENTNAME", jobType == 3 ? "Dr" : "" + clientName +"("+ ClientId + ")");
             mail.Body = getLogoUrl(mail.Body);
             mail.Body = getVereficationUrl(mail.Body, ClientId);
+            mail.Body = tempPassword(mail.Body, password, jobType);
             SmtpServer.Port = 587;
             SmtpServer.EnableSsl = true;
             SmtpServer.UseDefaultCredentials = false;
@@ -55,6 +56,11 @@ namespace AngularJSAuthentication.API.Services
             return html.Replace("LOGOSRC", 
                "<img src='"+ constant.logoUrl +"' style = 'border:0;width:200px;max-width:100%;' alt = 'Header' title = 'Image' />"
                );
+        }
+
+        public string tempPassword(string html, string password, int jobTpye)
+        {
+            return html.Replace("PASSWORD", jobTpye == 2 || jobTpye == 3 ? $"<p>Your First Time Password is <b>{password}</b></p>" : "");
         }
 
         public string getVereficationUrl(string html, string clientId)
