@@ -107,15 +107,15 @@ namespace WebAPI.Services
             return builder.ToString();
         }
 
-        public ApplicationUser UserAcoount(dynamic model)
+        public ApplicationUser UserAcoount(dynamic model, int countrycodevalue)
         {
             var user = new ApplicationUser()
             {
                 UserName = model.Email,
                 Email = model.Email,
                 JobType = model.jobType,
-                CountryCodes = model.CountryCode,
-                Gender = model.jobType == 1 ? model.Gender : 1
+                CountryCodes = countrycodevalue,
+                Gender = model.jobType == 1 ? model.Gender : 0
             };
             user.FirstName = model.FirstName;
             user.PhoneNumber = model.PhoneNumber;

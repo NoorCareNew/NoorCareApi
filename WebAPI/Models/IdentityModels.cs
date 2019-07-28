@@ -43,7 +43,7 @@ namespace WebAPI.Models
             modelBuilder.Entity<TblCountry>().ToTable("TblCountry");
             modelBuilder.Entity<InsuranceInformation>().ToTable("InsuranceInformation");
             modelBuilder.Entity<QuickHeathDetails>().ToTable("QuickHeathDetails");
-            modelBuilder.Entity<HospitalDetails>().ToTable("HospitalDetail");
+            modelBuilder.Entity<HospitalDetails>().ToTable("HospitalDetails");
             modelBuilder.Entity<QuickUpload>().ToTable("QuickUpload");
             modelBuilder.Entity<Doctor>().ToTable("Doctor");
             modelBuilder.Entity<Secretary>().ToTable("Secretary");            

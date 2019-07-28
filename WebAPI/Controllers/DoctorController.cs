@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
             var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
             string password = _registration.RandomPassword(6);
-            ApplicationUser user = _registration.UserAcoount(obj);
+            ApplicationUser user = _registration.UserAcoount(obj, Convert.ToInt16(countryCode.CountryCodes));
             IdentityResult result = manager.Create(user, password);
             user.PasswordHash = password;
             _registration.sendRegistrationEmail(user);

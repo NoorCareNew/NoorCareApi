@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             CountryCode countryCode = _countryCodeRepository.Find(x=>x.Id == model.CountryCode).FirstOrDefault();
             var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(userStore);
-            ApplicationUser user = _registration.UserAcoount(model);
+            ApplicationUser user = _registration.UserAcoount(model, Convert.ToInt16(countryCode.CountryCodes));
             IdentityResult result = manager.Create(user, model.Password);
             IHttpActionResult errorResult = GetErrorResult(result);
             if (errorResult != null)
