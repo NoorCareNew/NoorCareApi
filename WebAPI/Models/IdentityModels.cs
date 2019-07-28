@@ -8,6 +8,9 @@ namespace WebAPI.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int JobType { get; set; }
+        public int CountryCodes { get; set; }
+        public int? Gender { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
@@ -40,7 +43,7 @@ namespace WebAPI.Models
             modelBuilder.Entity<TblCountry>().ToTable("TblCountry");
             modelBuilder.Entity<InsuranceInformation>().ToTable("InsuranceInformation");
             modelBuilder.Entity<QuickHeathDetails>().ToTable("QuickHeathDetails");
-            modelBuilder.Entity<HospitalDetail>().ToTable("HospitalDetail");
+            modelBuilder.Entity<HospitalDetails>().ToTable("HospitalDetail");
             modelBuilder.Entity<QuickUpload>().ToTable("QuickUpload");
             modelBuilder.Entity<Doctor>().ToTable("Doctor");
             modelBuilder.Entity<Secretary>().ToTable("Secretary");            
