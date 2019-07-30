@@ -70,7 +70,10 @@ namespace NoorCare.Repository
                     {
                         return new SecretaryRepository() as TRepository;
                     }
-
+                    if (typeof(TRepository) == typeof(IFeedbackRepository))
+                    {
+                        return new FeedbackRepository() as TRepository;
+                    }
                     return null;
                 default:
                     return null;
