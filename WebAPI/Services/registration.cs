@@ -57,6 +57,10 @@ namespace WebAPI.Services
             {
                 priFix = "NCS-";
             }
+            else if (jobType == 5) // For Appointment
+            {
+                priFix = "NCA-";
+            }
             else if (jobType == 2)
             {
                 priFix = "NCH-";

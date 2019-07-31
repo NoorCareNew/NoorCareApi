@@ -20,6 +20,8 @@ namespace NoorCare.Repository
     public class DoctorRepository : EFRepositoryBase<ApplicationDbContext,Doctor,int>, IDoctorRepository { }
     public class SecretaryRepository : EFRepositoryBase<ApplicationDbContext, Secretary, int>, ISecretaryRepository { }
     public class FeedbackRepository : EFRepositoryBase<ApplicationDbContext, Feedback, int>, IFeedbackRepository { }
+    public class AppointmentRepository : EFRepositoryBase<ApplicationDbContext, Appointment, int>, IAppointmentRepository { }
+    
 }
 
 

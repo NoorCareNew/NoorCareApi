@@ -74,6 +74,12 @@ namespace NoorCare.Repository
                     {
                         return new FeedbackRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(IAppointmentRepository))
+                    {
+                        return new AppointmentRepository() as TRepository;
+                    }
+
+                    
                     return null;
                 default:
                     return null;

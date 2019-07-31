@@ -48,6 +48,8 @@ namespace WebAPI.Models
             modelBuilder.Entity<Doctor>().ToTable("Doctor");
             modelBuilder.Entity<Secretary>().ToTable("Secretary");
             modelBuilder.Entity<Feedback>().ToTable("Feedback");
+            modelBuilder.Entity<Appointment>().ToTable("Appointment");
+            
         }
     }
 }

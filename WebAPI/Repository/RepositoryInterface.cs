@@ -19,5 +19,7 @@ namespace WebAPI.Repository
     public interface ISecretaryRepository : IRepository<Secretary, int> { }
     public interface IHospitalDetailsRepository : IRepository<HospitalDetails, int> { }
     public interface IFeedbackRepository : IRepository<Feedback, int> { }
+    public interface IAppointmentRepository : IRepository<Appointment, int> { }
     
+
 }
