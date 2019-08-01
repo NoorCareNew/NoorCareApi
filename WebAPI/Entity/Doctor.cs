@@ -54,5 +54,9 @@ namespace WebAPI.Entity
         public string ModifiedBy { get; set; }
         public DateTime DateEntered { get; set; }
         public DateTime DateModified { get; set; }
+
+        [MaxLength(1000)]
+        public string AboutUs { get; set; }
+
     }
 }
