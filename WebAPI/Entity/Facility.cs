@@ -60,6 +60,37 @@ namespace WebAPI.Entity
     }
 
     [Serializable]
+    [Table("TblHospitalServices")]
+    public class TblHospitalServices : IEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        public string HospitalServices { get; set; }
+        public string HospitalId { get; set; }
+
+    }
+
+    [Serializable]
+    [Table("TblHospitalSpecialties")]
+    public class TblHospitalSpecialties : IEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        public string HospitalSpecialties { get; set; }
+        public string HospitalId { get; set; }
+
+    }
+
+    [Serializable]
+    [Table("TblHospitalAmenities")]
+    public class TblHospitalAmenities : IEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        public string HospitalAmenities { get; set; }
+    }
+
+    [Serializable]
     [Table("InsuranceInformation")]
     public class InsuranceInformation : IEntity<int>
     {

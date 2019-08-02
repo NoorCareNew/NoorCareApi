@@ -70,6 +70,18 @@ namespace NoorCare.Repository
                     {
                         return new SecretaryRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(ITblHospitalAmenitiesRepository))
+                    {
+                        return new TblHospitalAmenitiesRepository() as TRepository;
+                    }
+                    if (typeof(TRepository) == typeof(ITblHospitalServicesRepository))
+                    {
+                        return new TblHospitalServicesRepository() as TRepository;
+                    }
+                    if (typeof(TRepository) == typeof(ITblHospitalSpecialtiesRepository))
+                    {
+                        return new TblHospitalSpecialtiesRepository() as TRepository;
+                    }
 
                     return null;
                 default:

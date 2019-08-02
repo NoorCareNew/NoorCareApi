@@ -46,7 +46,11 @@ namespace WebAPI.Models
             modelBuilder.Entity<HospitalDetails>().ToTable("HospitalDetails");
             modelBuilder.Entity<QuickUpload>().ToTable("QuickUpload");
             modelBuilder.Entity<Doctor>().ToTable("Doctor");
-            modelBuilder.Entity<Secretary>().ToTable("Secretary");            
+            modelBuilder.Entity<Secretary>().ToTable("Secretary");
+
+            modelBuilder.Entity<TblHospitalAmenities>().ToTable("NoorCare.TblHospitalAmenities");
+            modelBuilder.Entity<TblHospitalServices>().ToTable("TblHospitalServices");
+            modelBuilder.Entity<TblHospitalSpecialties>().ToTable("TblHospitalSpecialties");
         }
     }
 }

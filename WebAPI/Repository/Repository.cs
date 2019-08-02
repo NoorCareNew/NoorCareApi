@@ -19,6 +19,10 @@ namespace NoorCare.Repository
     public class QuickUploadRepository : EFRepositoryBase<ApplicationDbContext, QuickUpload, int>, IQuickUploadRepository { }
     public class DoctorRepository : EFRepositoryBase<ApplicationDbContext,Doctor,int>, IDoctorRepository { }
     public class SecretaryRepository : EFRepositoryBase<ApplicationDbContext, Secretary, int>, ISecretaryRepository { }
+
+    public class TblHospitalSpecialtiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalSpecialties, int>, ITblHospitalSpecialtiesRepository { }
+    public class TblHospitalServicesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalServices, int>, ITblHospitalServicesRepository { }
+    public class TblHospitalAmenitiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalAmenities, int>, ITblHospitalAmenitiesRepository { }
 }
 
 
