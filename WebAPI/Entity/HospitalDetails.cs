@@ -40,7 +40,7 @@ public partial class HospitalDetails : IEntity<int>
     public string Country { get; set; }
     [MaxLength(200)]
     public string City { get; set; }
-    public int PostCode { get; set; }
+    public string PostCode { get; set; }
     [MaxLength(200)]
     public string Landmark { get; set; }
 
@@ -73,7 +73,7 @@ public partial class HospitalDetails : IEntity<int>
     public string CreatedBy { get; set; }
     [MaxLength(50)]
     public string ModifiedBy { get; set; }
-    public DateTime ModifiedDate { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime? ModifiedDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 }
 

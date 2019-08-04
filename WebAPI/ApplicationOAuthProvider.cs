@@ -78,7 +78,7 @@ namespace WebAPI
                     identity.AddClaim(new Claim("Username", user.UserName));
                     identity.AddClaim(new Claim("Email", user.Email));
                     identity.AddClaim(new Claim("FirstName", user.FirstName));
-                    identity.AddClaim(new Claim("LastName", user.LastName));
+                    identity.AddClaim(new Claim("LastName", user.LastName == null? "" : user.LastName));
                     identity.AddClaim(new Claim("LoggedOn", DateTime.Now.ToString()));
                     identity.AddClaim(new Claim("PhoneNo", user.PhoneNumber == null? " " : user.PhoneNumber));
                     identity.AddClaim(new Claim("JobType", user.JobType.ToString()));
