@@ -63,5 +63,31 @@ namespace WebAPI.Controllers
             return _stateRepository.GetAll().ToList();
         }
 
+        [Route("api/hospitalServices")]
+        [HttpGet]
+        [AllowAnonymous]
+        public List<TblHospitalServices> HospitalServices()
+        {
+            ITblHospitalServicesRepository _stateRepository = RepositoryFactory.Create<ITblHospitalServicesRepository>(ContextTypes.EntityFramework);
+            return _stateRepository.GetAll().ToList();
+        }
+
+        [Route("api/hospitalSpecialization")]
+        [HttpGet]
+        [AllowAnonymous]
+        public List<TblHospitalSpecialties> HospitalSpecialization()
+        {
+            ITblHospitalSpecialtiesRepository _stateRepository = RepositoryFactory.Create<ITblHospitalSpecialtiesRepository>(ContextTypes.EntityFramework);
+            return _stateRepository.GetAll().ToList();
+        }
+
+        [Route("api/hospitalAmenities")]
+        [HttpGet]
+        [AllowAnonymous]
+        public List<TblHospitalAmenities> HospitalAmenities()
+        {
+            ITblHospitalAmenitiesRepository _stateRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
+            return _stateRepository.GetAll().ToList();
+        }
     }
 }
