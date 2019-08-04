@@ -22,6 +22,10 @@ namespace NoorCare.Repository
     public class FeedbackRepository : EFRepositoryBase<ApplicationDbContext, Feedback, int>, IFeedbackRepository { }
     public class AppointmentRepository : EFRepositoryBase<ApplicationDbContext, Appointment, int>, IAppointmentRepository { }
     
+
+    public class TblHospitalSpecialtiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalSpecialties, int>, ITblHospitalSpecialtiesRepository { }
+    public class TblHospitalServicesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalServices, int>, ITblHospitalServicesRepository { }
+    public class TblHospitalAmenitiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalAmenities, int>, ITblHospitalAmenitiesRepository { }
 }
 
 
