@@ -40,7 +40,7 @@ public partial class HospitalDetails : IEntity<int>
     public string Country { get; set; }
     [MaxLength(200)]
     public string City { get; set; }
-    public int PostCode { get; set; }
+    public string PostCode { get; set; }
     [MaxLength(200)]
     public string Landmark { get; set; }
 
