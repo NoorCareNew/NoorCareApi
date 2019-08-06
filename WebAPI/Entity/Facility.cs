@@ -148,9 +148,21 @@ namespace WebAPI.Entity
     {
         [Key]
         public int Id { get; set; }
+        //public string ClientId { get; set; }
+        //public int HospitalId { get; set; }
+        //public int DesiesType { get; set; }
+        //public string FilePath { get; set; }
         public string ClientId { get; set; }
-        public int HospitalId { get; set; }
-        public int DesiesType { get; set; }
+        public string HospitalId { get; set; }
+        public string DesiesType { get; set; }
         public string FilePath { get; set; }
+        public string CountryCode { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
+        public string DateEntered { get; set; }
+        public string DateModified { get; set; }
     }
 }
