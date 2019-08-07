@@ -1,4 +1,5 @@
 ﻿using NoorCare.Repository;
+using System.Web.UI.WebControls;
 using WebAPI.Entity;
 
 namespace WebAPI.Repository
@@ -23,5 +24,4 @@ namespace WebAPI.Repository
     public interface ITblHospitalAmenitiesRepository : IRepository<TblHospitalAmenities, int> { }
     public interface ITblHospitalServicesRepository : IRepository<TblHospitalServices, int> { }
     public interface ITblHospitalSpecialtiesRepository : IRepository<TblHospitalSpecialties, int> { }
-
 }

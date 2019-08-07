@@ -94,7 +94,11 @@ namespace NoorCare.Repository
                     {
                         return new TblHospitalSpecialtiesRepository() as TRepository;
                     }
-
+                    if (typeof(TRepository) == typeof(IQuickUploadRepository))
+                    {
+                        return new QuickUploadRepository() as TRepository;
+                    }
+                    
                     return null;
                 default:
                     return null;

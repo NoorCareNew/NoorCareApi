@@ -89,5 +89,6 @@ namespace WebAPI.Controllers
             ITblHospitalAmenitiesRepository _stateRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
             return _stateRepository.GetAll().ToList();
         }
+
     }
 }

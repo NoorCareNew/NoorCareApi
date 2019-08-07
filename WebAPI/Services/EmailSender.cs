@@ -12,15 +12,15 @@ namespace AngularJSAuthentication.API.Services
         public void email_send(string mailTo = "NoorCareNew@gmail.com", string clientName = "Noor Care New", 
             string ClientId = "Test", int jobType = 0, string password = null)
         {
-            string html = File.ReadAllText(HttpContext.Current.Server.MapPath("~/Services/templat.html"));
             string prifix = jobType == 3 ? "Dr " : "";
+           string html = File.ReadAllText(HttpContext.Current.Server.MapPath("~/Services/templat.html"));
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
             mail.From = new MailAddress("NoorCareNew@gmail.com");
             mail.To.Add(mailTo);
             mail.IsBodyHtml = true;
             mail.Subject = "Registration Successfully ";
-            mail.Body = html.Replace("CLIENTNAME", prifix + clientName +"("+ ClientId + ")");
+            mail.Body = html.Replace("CLIENTNAME", prifix + clientName + "("+ ClientId + ")");
             mail.Body = getLogoUrl(mail.Body);
             mail.Body = getVereficationUrl(mail.Body, ClientId);
             mail.Body = tempPassword(mail.Body, password, jobType);
