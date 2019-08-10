@@ -59,4 +59,32 @@ namespace WebAPI.Entity
         public string AboutUs { get; set; }
 
     }
+
+
+    [Serializable]
+    [Table("DoctorAvailableTime")]
+    public class DoctorAvailableTime : IEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        [MaxLength(50)]
+        public string DoctorId { get; set; }
+        [MaxLength(50)]
+        public string TimeId { get; set; }
+        [MaxLength(100)]
+        public string Days { get; set; }
+        [MaxLength(50)]
+        public string Date { get; set; }
+        public bool IsActive { get; set; }
+
+        public bool IsDeleted { get; set; }
+        [MaxLength(200)]
+        public string CreatedBy { get; set; }
+        [MaxLength(200)]
+        public string ModifiedBy { get; set; }
+        [MaxLength(50)]
+        public string DateEntered { get; set; }
+        [MaxLength(50)]
+        public string DateModified { get; set; }
+    }
 }

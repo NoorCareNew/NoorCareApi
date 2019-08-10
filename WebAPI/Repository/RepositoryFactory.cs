@@ -98,6 +98,10 @@ namespace NoorCare.Repository
                     {
                         return new QuickUploadRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(IDoctorAvailableTimeRepository))
+                    {
+                        return new DoctorAvailableTimeRepository() as TRepository;
+                    }
                     
                     return null;
                 default:

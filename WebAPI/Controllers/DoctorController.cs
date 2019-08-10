@@ -134,7 +134,7 @@ namespace WebAPI.Controllers
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
-
+                          
         private int getTableId(string doctorId)
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
@@ -142,5 +142,28 @@ namespace WebAPI.Controllers
 
             return result.Id;
         }
+
+        //---------------- Doctor Availability
+        [Route("api/doctor/doctorAvailablity")]
+        [HttpPost]
+        [AllowAnonymous]
+        public HttpResponseMessage DoctorAvailablity(DoctorAvailableTime obj)
+        {
+            IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
+            var _Created = _doctorAvailabilityRepo.Insert(obj);
+            return Request.CreateResponse(HttpStatusCode.Accepted, obj.Id);
+        }
+
+        [Route("api/doctor/getDoctorAvailablity/{doctorid}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage getDoctorAvailablity(string doctorid)
+        {
+            IDoctorAvailableTimeRepository _doctorAvailibilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
+            var result = _doctorAvailibilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
     }
 }
