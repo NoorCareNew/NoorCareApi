@@ -20,15 +20,17 @@ namespace WebAPI.Controllers
     public class DoctorController : ApiController
     {
         Registration _registration = new Registration();
+        IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+        IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+
+
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Doctor
         public HttpResponseMessage GetAll()
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var result =  _doctorRepo.GetAll().ToList();
-
+            var result = _doctorRepo.GetAll().ToList();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
@@ -38,10 +40,9 @@ namespace WebAPI.Controllers
         // GET: api/Doctor/5
         public HttpResponseMessage GetDetail(string doctorid)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
 
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);            
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [Route("api/doctor/register")]
@@ -117,7 +118,7 @@ namespace WebAPI.Controllers
         {
             int tbleId = getTableId(obj.DoctorId);
             obj.Id = tbleId;
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+          //  IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -128,13 +129,13 @@ namespace WebAPI.Controllers
         // DELETE: api/Doctor/5
         public HttpResponseMessage Delete(string doctorid)
         {
-            int tbleId= getTableId(doctorid);
+            int tbleId = getTableId(doctorid);
 
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+           // IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
-                          
+
         private int getTableId(string doctorId)
         {
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
@@ -158,12 +159,75 @@ namespace WebAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         public HttpResponseMessage getDoctorAvailablity(string doctorid)
-        {
+        {             
             IDoctorAvailableTimeRepository _doctorAvailibilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
             var result = _doctorAvailibilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
 
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
+        [Route("api/doctor/getDoctorDetail/{doctorid}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage getDoctorDetail(string doctorid)
+        {
+            var doctorCollection = _doctorRepo.GetAll();
+            var hospitalCollection = _hospitaldetailsRepo.GetAll();
+            var result = (from d in doctorCollection.Where(d => d.DoctorId == doctorid).DefaultIfEmpty()
+                           from h in hospitalCollection.Where(x => x.HospitalId == d.HospitalId).DefaultIfEmpty()
+
+                           select new
+                           {
+                               DoctorId = d.DoctorId,
+                               FirstName = d.FirstName,
+                               LastName = d.LastName,
+                               Email = d.Email,
+                               PhoneNumber = d.PhoneNumber,
+                               AlternatePhoneNumber = d.AlternatePhoneNumber,
+                               Gender = d.Gender,
+                               Experience = d.Experience,
+                               FeeMoney = d.FeeMoney,
+                               Language = d.Language,
+                               AgeGroupGender = d.AgeGroupGender,
+                               Degree = d.Degree,
+                               Specialization = d.Specialization,
+                               AboutUs = d.AboutUs,
+                               HospitalId = h.HospitalId,
+                               HospitalName = h.HospitalName,
+                               Mobile = h.Mobile,
+                               AlternateNumber = h.AlternateNumber,
+                               Website = h.Website,
+                               EstablishYear = h.EstablishYear,
+                               NumberofBed = h.NumberofBed,
+                               NumberofAmbulance = h.NumberofAmbulance,
+                               PaymentType = h.PaymentType,
+                               Emergency = h.Emergency,
+                               FacilityId = h.FacilityId,
+                               Address = h.Address,
+                               Street = h.Street,
+                               Country = h.Country,
+                               City = h.City,
+                               PostCode = h.PostCode,
+                               Landmark = h.Landmark,
+                               InsuranceCompanies = h.InsuranceCompanies,
+                               Amenities = h.Amenities,
+                               Services = h.Services,
+                               Timing = h.Timing,
+                               Monday = h.Monday,
+                               Tuesday = h.Tuesday,
+                               Wednesday = h.Wednesday,
+                               Thursday = h.Thursday,
+                               Friday = h.Friday,
+                               Saturday = h.Saturday,
+                               Sunday = h.Sunday,
+
+                           }).ToList();
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+
+
+        }
+
     }
 }
+
