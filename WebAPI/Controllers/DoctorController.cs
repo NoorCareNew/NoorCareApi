@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NoorCare.Repository;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -22,8 +23,8 @@ namespace WebAPI.Controllers
         Registration _registration = new Registration();
         IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
         IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
-
-
+        IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
+        
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -105,7 +106,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult getDoctorProfile(string DoctorId)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+          //  IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             return Ok(_doctorRepo.Find(x => x.DoctorId == DoctorId));
         }
 
@@ -118,7 +119,6 @@ namespace WebAPI.Controllers
         {
             int tbleId = getTableId(obj.DoctorId);
             obj.Id = tbleId;
-          //  IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -131,14 +131,14 @@ namespace WebAPI.Controllers
         {
             int tbleId = getTableId(doctorid);
 
-           // IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+            // IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         private int getTableId(string doctorId)
         {
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+            //IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
 
             return result.Id;
@@ -149,8 +149,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         public HttpResponseMessage DoctorAvailablity(DoctorAvailableTime obj)
-        {
-            IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
+        {            
             var _Created = _doctorAvailabilityRepo.Insert(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, obj.Id);
         }
@@ -159,75 +158,71 @@ namespace WebAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         public HttpResponseMessage getDoctorAvailablity(string doctorid)
-        {             
-            IDoctorAvailableTimeRepository _doctorAvailibilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
-            var result = _doctorAvailibilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
-
+        {
+            var result = _doctorAvailabilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/doctor/getDoctorDetail/{doctorid}")]
+
+        [Route("api/doctor/getDoctorDetail/{cityId}/{countryId}/{diesiesType}")]
         [HttpGet]
         [AllowAnonymous]
-        public HttpResponseMessage getDoctorDetail(string doctorid)
+        public HttpResponseMessage getDoctorDetail(string cityId, string countryId, string diesiesType)
         {
-            var doctorCollection = _doctorRepo.GetAll();
-            var hospitalCollection = _hospitaldetailsRepo.GetAll();
-            var result = (from d in doctorCollection.Where(d => d.DoctorId == doctorid).DefaultIfEmpty()
-                           from h in hospitalCollection.Where(x => x.HospitalId == d.HospitalId).DefaultIfEmpty()
+            var result = (
+                 from d in _doctorRepo.GetAll()
+                 join h in _hospitaldetailsRepo.GetAll() on d.HospitalId equals h.HospitalId
+                 select new
+                 {
+                     DoctorId = d.DoctorId,
+                     FirstName = d.FirstName,
+                     LastName = d.LastName,
+                     Email = d.Email,
+                     PhoneNumber = d.PhoneNumber,
+                     AlternatePhoneNumber = d.AlternatePhoneNumber,
+                     Gender = d.Gender,
+                     Experience = d.Experience,
+                     FeeMoney = d.FeeMoney,
+                     Language = d.Language,
+                     AgeGroupGender = d.AgeGroupGender,
+                     Degree = d.Degree,
+                     Specialization = d.Specialization,
+                     AboutUs = d.AboutUs,
+                     HospitalId = h.HospitalId,
+                     HospitalName = h.HospitalName,
+                     Mobile = h.Mobile,
+                     AlternateNumber = h.AlternateNumber,
+                     Website = h.Website,
+                     EstablishYear = h.EstablishYear,
+                     NumberofBed = h.NumberofBed,
+                     NumberofAmbulance = h.NumberofAmbulance,
+                     PaymentType = h.PaymentType,
+                     Emergency = h.Emergency,
+                     FacilityId = h.FacilityId,
+                     Address = h.Address,
+                     Street = h.Street,
+                     Country = h.Country,
+                     City = h.City,
+                     PostCode = h.PostCode,
+                     Landmark = h.Landmark,
+                     InsuranceCompanies = h.InsuranceCompanies,
+                     Amenities = h.Amenities,
+                     Services = h.Services,
+                     Timing = h.Timing,
+                     Monday = h.Monday,
+                     Tuesday = h.Tuesday,
+                     Wednesday = h.Wednesday,
+                     Thursday = h.Thursday,
+                     Friday = h.Friday,
+                     Saturday = h.Saturday,
+                     Sunday = h.Sunday,
 
-                           select new
-                           {
-                               DoctorId = d.DoctorId,
-                               FirstName = d.FirstName,
-                               LastName = d.LastName,
-                               Email = d.Email,
-                               PhoneNumber = d.PhoneNumber,
-                               AlternatePhoneNumber = d.AlternatePhoneNumber,
-                               Gender = d.Gender,
-                               Experience = d.Experience,
-                               FeeMoney = d.FeeMoney,
-                               Language = d.Language,
-                               AgeGroupGender = d.AgeGroupGender,
-                               Degree = d.Degree,
-                               Specialization = d.Specialization,
-                               AboutUs = d.AboutUs,
-                               HospitalId = h.HospitalId,
-                               HospitalName = h.HospitalName,
-                               Mobile = h.Mobile,
-                               AlternateNumber = h.AlternateNumber,
-                               Website = h.Website,
-                               EstablishYear = h.EstablishYear,
-                               NumberofBed = h.NumberofBed,
-                               NumberofAmbulance = h.NumberofAmbulance,
-                               PaymentType = h.PaymentType,
-                               Emergency = h.Emergency,
-                               FacilityId = h.FacilityId,
-                               Address = h.Address,
-                               Street = h.Street,
-                               Country = h.Country,
-                               City = h.City,
-                               PostCode = h.PostCode,
-                               Landmark = h.Landmark,
-                               InsuranceCompanies = h.InsuranceCompanies,
-                               Amenities = h.Amenities,
-                               Services = h.Services,
-                               Timing = h.Timing,
-                               Monday = h.Monday,
-                               Tuesday = h.Tuesday,
-                               Wednesday = h.Wednesday,
-                               Thursday = h.Thursday,
-                               Friday = h.Friday,
-                               Saturday = h.Saturday,
-                               Sunday = h.Sunday,
+                 }).ToList();
 
-                           }).ToList();
+            var SearchResult = result.Where(x => x.Country == countryId || x.City == cityId || x.Specialization.Contains(diesiesType)).ToList();
 
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
-
-
+            return Request.CreateResponse(HttpStatusCode.Accepted, SearchResult);
         }
-
     }
 }
 
