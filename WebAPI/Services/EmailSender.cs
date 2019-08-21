@@ -9,7 +9,7 @@ namespace AngularJSAuthentication.API.Services
 {
     public class EmailSender
     {
-        public void email_send(string mailTo = "manishcs0019@gmail.com", string clientName = "Manish Sharma", 
+        public void email_send(string mailTo = "NoorCareNew@gmail.com", string clientName = "Noor Care New", 
             string ClientId = "Test", int jobType = 0, string password = null)
         {
             string prifix = jobType == 3 ? "Dr " : "";

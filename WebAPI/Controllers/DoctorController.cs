@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
         IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
         IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
-        
+
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -36,39 +36,27 @@ namespace WebAPI.Controllers
         }
 
         [Route("api/doctor/{country?}/{city?}/{diseaseType?}")]
-
-
-
         [HttpGet]
-
-
-
         [AllowAnonymous]
-
-
-
         // GET: api/Doctor
-
-
-        public HttpResponseMessage Getdoctor(string country = null, string city = null, string diseaseType = null)
+        public HttpResponseMessage Getdoctor(string country= null, string city = null, string diseaseType = null)
         {
             IHospitalDetailsRepository _hospitalRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
-
-            List<HospitalDetails> hospitalDetails = _hospitalRepo.Find(x => country != null ? x.Country == country : x.Country == x.Country && city != null ? x.City == city : x.City == x.City);
-
+            List<HospitalDetails> hospitalDetails = _hospitalRepo.Find(
+                x => country != null ? x.Country == country : x.Country == x.Country &&
+                city != null ? x.City == city : x.City == x.City);
             List<string> _hospitalid = new List<string>();
-
             foreach (var hospitalDetail in hospitalDetails ?? new List<HospitalDetails>())
             {
                 _hospitalid.Add(hospitalDetail.HospitalId);
             }
-
             string _hospitalId = string.Join(",", _hospitalid);
-
             IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+            var result = _doctorRepo.Find(x =>
+            x.HospitalId.Contains(_hospitalId) &&
+            diseaseType != null ? x.Specialization.Contains(diseaseType) : x.Specialization == x.Specialization
+            );
 
-            var result = _doctorRepo.Find(x =>x.HospitalId.Contains(_hospitalId) &&
-            diseaseType != null ? x.Specialization.Contains(diseaseType) : x.Specialization == x.Specialization);
 
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -144,7 +132,6 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult getDoctorProfile(string DoctorId)
         {
-          //  IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             return Ok(_doctorRepo.Find(x => x.DoctorId == DoctorId));
         }
 
@@ -168,8 +155,6 @@ namespace WebAPI.Controllers
         public HttpResponseMessage Delete(string doctorid)
         {
             int tbleId = getTableId(doctorid);
-
-            // IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -200,18 +185,19 @@ namespace WebAPI.Controllers
             var result = _doctorAvailabilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
+        
 
-
-        [Route("api/doctor/getDoctorDetail/{cityId}/{countryId}/{diesiesType}")]
+        [Route("api/doctor/getDoctorDetail/{cityId?}/{countryId?}/{diesiesType?}")]
         [HttpGet]
         [AllowAnonymous]
-        public HttpResponseMessage getDoctorDetail(string cityId, string countryId, string diesiesType)
+        public HttpResponseMessage getDoctorDetail(string cityId = null, string countryId = null, string diesiesType = null)
         {
             var result = (
                  from d in _doctorRepo.GetAll()
                  join h in _hospitaldetailsRepo.GetAll() on d.HospitalId equals h.HospitalId
                  select new
                  {
+                     Id=d.Id,
                      DoctorId = d.DoctorId,
                      FirstName = d.FirstName,
                      LastName = d.LastName,
@@ -257,7 +243,10 @@ namespace WebAPI.Controllers
 
                  }).ToList();
 
-            var SearchResult = result.Where(x => x.Country == countryId || x.City == cityId || x.Specialization.Contains(diesiesType)).ToList();
+            var SearchResult = result.Where(x => cityId != null ? x.City == cityId : x.City == x.City
+            && countryId != null ? x.Country == countryId : x.Country == x.Country
+            && diesiesType != null ? x.Specialization.Contains(diesiesType) : x.Specialization == x.Specialization
+            ).ToList();
 
             return Request.CreateResponse(HttpStatusCode.Accepted, SearchResult);
         }
