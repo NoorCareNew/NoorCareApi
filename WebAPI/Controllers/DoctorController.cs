@@ -35,6 +35,44 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
+        [Route("api/doctor/{country?}/{city?}/{diseaseType?}")]
+
+
+
+        [HttpGet]
+
+
+
+        [AllowAnonymous]
+
+
+
+        // GET: api/Doctor
+
+
+        public HttpResponseMessage Getdoctor(string country = null, string city = null, string diseaseType = null)
+        {
+            IHospitalDetailsRepository _hospitalRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+
+            List<HospitalDetails> hospitalDetails = _hospitalRepo.Find(x => country != null ? x.Country == country : x.Country == x.Country && city != null ? x.City == city : x.City == x.City);
+
+            List<string> _hospitalid = new List<string>();
+
+            foreach (var hospitalDetail in hospitalDetails ?? new List<HospitalDetails>())
+            {
+                _hospitalid.Add(hospitalDetail.HospitalId);
+            }
+
+            string _hospitalId = string.Join(",", _hospitalid);
+
+            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+
+            var result = _doctorRepo.Find(x =>x.HospitalId.Contains(_hospitalId) &&
+            diseaseType != null ? x.Specialization.Contains(diseaseType) : x.Specialization == x.Specialization);
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
         [Route("api/doctor/getdetail/{doctorid}")]
         [HttpGet]
         [AllowAnonymous]
