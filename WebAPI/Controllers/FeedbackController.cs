@@ -6,20 +6,19 @@ using System.Net.Http;
 using System.Web.Http;
 using WebAPI.Entity;
 using WebAPI.Repository;
-using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
     public class FeedbackController : ApiController
     {
-        Registration _registration = new Registration();
-        [Route("api/feedback/getall")]
+        IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
+
+        [Route("api/feedback/getAllFeedback")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Feedback
-        public HttpResponseMessage GetAll()
-        {
-            IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
+        public HttpResponseMessage GetAllFeedback()
+        {            
             var result = _feedbackRepo.GetAll().ToList();
 
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
@@ -31,9 +30,7 @@ namespace WebAPI.Controllers
         // GET: api/feedback/5
         public HttpResponseMessage GetDetail(string feedbackId)
         {
-            IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
             var result = _feedbackRepo.Find(x => x.FeedbackID == feedbackId).FirstOrDefault();
-
             return Request.CreateResponse(HttpStatusCode.Accepted, result);            
         }
 
@@ -48,7 +45,6 @@ namespace WebAPI.Controllers
                 Random rd = new Random(987612345);
                 var _feedbackId ="F_"+ rd.Next();
                 obj.FeedbackID = _feedbackId;
-                IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
                 var _feedbackCreated = _feedbackRepo.Insert(obj);
                 return Request.CreateResponse(HttpStatusCode.Accepted, obj.FeedbackID);
             }
@@ -64,7 +60,6 @@ namespace WebAPI.Controllers
         {
             int tbleId = getTableId(obj.FeedbackID);
             obj.Id = tbleId;
-            IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
             var result = _feedbackRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -77,7 +72,6 @@ namespace WebAPI.Controllers
         {
             int tbleId= getTableId(feedbackid);
 
-            IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
             var result = _feedbackRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }

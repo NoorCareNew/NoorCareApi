@@ -25,6 +25,9 @@ namespace WebAPI.Controllers
         IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
         IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
         IDiseaseRepository _diseaseDetailRepo = RepositoryFactory.Create<IDiseaseRepository>(ContextTypes.EntityFramework);
+        ITblHospitalServicesRepository _hospitalServicesRepository = RepositoryFactory.Create<ITblHospitalServicesRepository>(ContextTypes.EntityFramework);
+        ITblHospitalAmenitiesRepository _hospitalAmenitieRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
+
 
         [Route("api/doctor/getall")]
         [HttpGet]
@@ -81,18 +84,26 @@ namespace WebAPI.Controllers
         {
             ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
             CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
-            EmailSender _emailSender = new EmailSender();
-            var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            var manager = new UserManager<ApplicationUser>(userStore);
-            string password = _registration.RandomPassword(6);
-            ApplicationUser user = _registration.UserAcoount(obj, Convert.ToInt16(countryCode.CountryCodes));
-            IdentityResult result = manager.Create(user, password);
-            user.PasswordHash = password;
-            _registration.sendRegistrationEmail(user);
-            obj.DoctorId = user.Id;
-            IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
-            var _doctorCreated = _doctorRepo.Insert(obj);
-            return Request.CreateResponse(HttpStatusCode.Accepted, obj.DoctorId);
+            if (countryCode != null)
+            {
+                EmailSender _emailSender = new EmailSender();
+                var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+                var manager = new UserManager<ApplicationUser>(userStore);
+                string password = _registration.RandomPassword(6);
+                ApplicationUser user = _registration.UserAcoount(obj, Convert.ToInt16(countryCode.CountryCodes));
+                IdentityResult result = manager.Create(user, password);
+                user.PasswordHash = password;
+                _registration.sendRegistrationEmail(user);
+                obj.DoctorId = user.Id;
+                IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+                var _doctorCreated = _doctorRepo.Insert(obj);
+
+                return Request.CreateResponse(HttpStatusCode.Accepted, obj.DoctorId);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.Accepted, "Wrong country code");
+            }
         }
 
         [HttpPost]
@@ -194,6 +205,9 @@ namespace WebAPI.Controllers
         public HttpResponseMessage getDoctorDetail(string cityId = "0", string countryId = "0", string diseaseType = "0")
         {
             var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
+            var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
+            var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
+            
             var result = (
                  from d in _doctorRepo.GetAll()
                  join h in _hospitaldetailsRepo.GetAll().Where(x => (cityId != "0" && x.City == cityId)
@@ -234,8 +248,13 @@ namespace WebAPI.Controllers
                      PostCode = h.PostCode,
                      Landmark = h.Landmark,
                      InsuranceCompanies = h.InsuranceCompanies,
-                     Amenities = h.Amenities,
-                     Services = h.Services,
+                     //hospitalAmenitie
+                     //Amenities = h.Amenities,
+                     AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),//h.Amenities,
+                     Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),//  h.Services,
+                     //Services = h.Services,
+                     ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)), // h.Services,
+                     Services = getHospitalService(h.Services, hospitalService),//  h.Services,
                      Timing = h.Timing,
                      Monday = h.Monday,
                      Tuesday = h.Tuesday,
@@ -264,6 +283,24 @@ namespace WebAPI.Controllers
             var diseasesList = diseases.Where(x => myInts.Contains(x.Id)).ToList();
             //var diseasesListName = string.Join(",", diseases.Select(xx=>xx.DiseaseType).ToList());
             return diseasesList;
+        }
+
+        private List<TblHospitalServices> getHospitalService(string serviceType, List<TblHospitalServices> hospitalService)
+        {
+            var serviceTypes = serviceType.Split(',');
+            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+            var hospitalServiceList = hospitalService.Where(x => myInts.Contains(x.Id)).ToList();
+
+            return hospitalServiceList;
+        }
+
+        private List<TblHospitalAmenities> getHospitalAmenities(string amenitieType, List<TblHospitalAmenities> hospitalAmenitie)
+        {
+            var serviceTypes = amenitieType.Split(',');
+            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+            var hospitalAmenitieList = hospitalAmenitie.Where(x => myInts.Contains(x.Id)).ToList();
+
+            return hospitalAmenitieList;
         }
     }
 }
