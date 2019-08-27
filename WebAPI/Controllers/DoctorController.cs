@@ -27,6 +27,7 @@ namespace WebAPI.Controllers
         IDiseaseRepository _diseaseDetailRepo = RepositoryFactory.Create<IDiseaseRepository>(ContextTypes.EntityFramework);
         ITblHospitalServicesRepository _hospitalServicesRepository = RepositoryFactory.Create<ITblHospitalServicesRepository>(ContextTypes.EntityFramework);
         ITblHospitalAmenitiesRepository _hospitalAmenitieRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
+        IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
 
 
         [Route("api/doctor/getall")]
@@ -199,89 +200,26 @@ namespace WebAPI.Controllers
         }
 
 
-        [Route("api/doctor/getDoctorDetail/{cityId?}/{countryId?}/{diseaseType?}")]
+        [Route("api/result/{type?}{cityId?}/{countryId?}/{diseaseType?}")]
         [HttpGet]
         [AllowAnonymous]
-        public HttpResponseMessage getDoctorDetail(string cityId = "0", string countryId = "0", string diseaseType = "0")
+        public HttpResponseMessage getDoctorDetail(string type = "0",string cityId = "0", string countryId = "0", string diseaseType = "0")
         {
-            var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
-            var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
-            var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
-            
-            var result = (
-                 from d in _doctorRepo.GetAll()
-                 join h in _hospitaldetailsRepo.GetAll().Where(x => (cityId != "0" && x.City == cityId)
-                 && (countryId != "0" && x.Country == countryId)) on d.HospitalId equals h.HospitalId
-                 select new
-                 {
-                     Id = d.Id,
-                     DoctorId = d.DoctorId,
-                     FirstName = d.FirstName,
-                     LastName = d.LastName,
-                     Email = d.Email,
-                     PhoneNumber = d.PhoneNumber,
-                     AlternatePhoneNumber = d.AlternatePhoneNumber,
-                     Gender = d.Gender,
-                     Experience = d.Experience,
-                     FeeMoney = d.FeeMoney,
-                     Language = d.Language,
-                     AgeGroupGender = d.AgeGroupGender,
-                     Degree = d.Degree,
-                     SpecializationIds = Array.ConvertAll(d.Specialization.Split(','), s => int.Parse(s)),//d.Specialization,
-                     Specialization = getSpecialization(d.Specialization, disease),
-                     AboutUs = d.AboutUs,
-                     HospitalId = h.HospitalId,
-                     HospitalName = h.HospitalName,
-                     Mobile = h.Mobile,
-                     AlternateNumber = h.AlternateNumber,
-                     Website = h.Website,
-                     EstablishYear = h.EstablishYear,
-                     NumberofBed = h.NumberofBed,
-                     NumberofAmbulance = h.NumberofAmbulance,
-                     PaymentType = h.PaymentType,
-                     Emergency = h.Emergency,
-                     FacilityId = h.FacilityId,
-                     Address = h.Address,
-                     Street = h.Street,
-                     Country = h.Country,
-                     City = h.City,
-                     PostCode = h.PostCode,
-                     Landmark = h.Landmark,
-                     InsuranceCompanies = h.InsuranceCompanies,
-                     //hospitalAmenitie
-                     //Amenities = h.Amenities,
-                     AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),//h.Amenities,
-                     Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),//  h.Services,
-                     //Services = h.Services,
-                     ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)), // h.Services,
-                     Services = getHospitalService(h.Services, hospitalService),//  h.Services,
-                     Timing = h.Timing,
-                     Monday = h.Monday,
-                     Tuesday = h.Tuesday,
-                     Wednesday = h.Wednesday,
-                     Thursday = h.Thursday,
-                     Friday = h.Friday,
-                     Saturday = h.Saturday,
-                     Sunday = h.Sunday,
-
-                 }).ToList();
-           
-            var diesiesTypes = diseaseType.Split(',');
-
-            int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
-             
-            var SearchResult = diseaseType=="0"? result: result.Where(x => x.SpecializationIds.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
-            
-
-            return Request.CreateResponse(HttpStatusCode.Accepted, SearchResult);
+            FilterDoctor _filterDoctor = new FilterDoctor();
+            FilterHospital _filterHospital = new FilterHospital();
+            result _result = new result();
+            _result.Hospitals = getHospital(type, cityId, countryId, diseaseType, ref _filterDoctor, ref _filterHospital);
+            _result.FilterDoctor = type == "0"? _filterDoctor : null;
+            _result.FilterHospital = _filterHospital;
+            return Request.CreateResponse(HttpStatusCode.Accepted, _result);
         }
-
+        
+        #region Uility
         private List<Disease> getSpecialization(string diesiesType, List<Disease> diseases)
         {
             var diesiesTypes = diesiesType.Split(',');
             int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
             var diseasesList = diseases.Where(x => myInts.Contains(x.Id)).ToList();
-            //var diseasesListName = string.Join(",", diseases.Select(xx=>xx.DiseaseType).ToList());
             return diseasesList;
         }
 
@@ -302,6 +240,114 @@ namespace WebAPI.Controllers
 
             return hospitalAmenitieList;
         }
+        private List<Doctors> getDoctors(string HospitalId, string diseaseType, ref FilterDoctor _filterDoctor)
+        {
+            var diesiesTypes = diseaseType.Split(',');
+
+            int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
+            List<Disease> _disease = new List<Disease>();
+            Price _price = new Price();
+            PriceRange _priceRange = new PriceRange();
+            List<Price> _priceses = new List<Price>();
+            Doctors _doctor = new Doctors();
+            List<Doctors> _doctors = new List<Doctors>();
+            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId)
+                .Where(x => x.Specialization.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
+            var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
+            foreach (var d in doctors ?? new List<Doctor>())
+            {
+                var feedback = _feedbackRepo.Find(x => x.DoctorID == d.DoctorId);
+                _doctor = new Doctors
+                {
+                    DoctorId = d.DoctorId,
+                    FirstName = d.FirstName,
+                    LastName = d.LastName,
+                    Email = d.Email,
+                    PhoneNumber = d.PhoneNumber,
+                    AlternatePhoneNumber = d.AlternatePhoneNumber,
+                    Gender = d.Gender,
+                    Experience = d.Experience,
+                    FeeMoney = d.FeeMoney,
+                    Language = d.Language,
+                    AgeGroupGender = d.AgeGroupGender,
+                    Degree = d.Degree,
+                    SpecializationIds = Array.ConvertAll(d.Specialization.Split(','), s => int.Parse(s)),//d.Specialization,
+                    Specialization = getSpecialization(d.Specialization, disease),
+                    AboutUs = d.AboutUs,
+                    Likes = feedback.Where(x => x.ILike == true).Count(),
+                    Feedbacks = feedback.Count(),
+                    BookingUrl = $"booking /{d.DoctorId}",
+                    ProfileDetailUrl = $"doctorDetails/{d.DoctorId}",
+                };
+
+                // Add Filter Value
+                _priceRange.max = Convert.ToInt32(Math.Max(0, d.FeeMoney));
+                _priceRange.min = Convert.ToInt32(Math.Max(d.FeeMoney, d.FeeMoney));
+                _price = new Price { price = Convert.ToInt32(d.FeeMoney) };
+                _priceses.Add(_price);
+                _disease.AddRange(_doctor.Specialization);
+                _doctors.Add(_doctor);
+            }
+            _filterDoctor.PriceRange = _priceRange;
+            _filterDoctor.Price = _priceses;
+            _filterDoctor.Specialization = _disease.Select(x => new Disease { Id = x.Id, DiseaseType = x.DiseaseType }).Distinct().ToList();
+            return _doctors;
+        }
+        private List<Hospital> getHospital(string type, string cityId, string countryId, string diseaseType, ref FilterDoctor _filterDoctor, ref FilterHospital _filterHospital)
+        {
+            var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
+            var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
+            Hospital _hospital = new Hospital();
+            List<Hospital> _hospitals = new List<Hospital>();
+            List<HospitalDetails> hospitals = _hospitaldetailsRepo.Find(x => (cityId != "0" && x.City == cityId) &&
+             (countryId != "0" && x.Country == countryId));
+            List<TblHospitalServices> _hospitalServices = new List<TblHospitalServices>();
+            List<TblHospitalAmenities> _hospitalAmenities = new List<TblHospitalAmenities>();
+
+            foreach (var h in hospitals ?? new List<HospitalDetails>())
+            {
+               var feedback = _feedbackRepo.Find(x => x.DoctorID == h.HospitalId);
+                _hospital = new Hospital
+                {
+                    HospitalId = h.HospitalId,
+                    HospitalName = h.HospitalName,
+                    Mobile = h.Mobile,
+                    AlternateNumber = h.AlternateNumber,
+                    Website = h.Website,
+                    EstablishYear = h.EstablishYear,
+                    NumberofBed = h.NumberofBed,
+                    NumberofAmbulance = h.NumberofAmbulance,
+                    PaymentType = h.PaymentType,
+                    Emergency = h.Emergency,
+                    FacilityId = h.FacilityId,
+                    Address = h.Address,
+                    Street = h.Street,
+                    Country = h.Country,
+                    City = h.City,
+                    PostCode = h.PostCode,
+                    Landmark = h.Landmark,
+                    InsuranceCompanies = h.InsuranceCompanies,
+                    AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),
+                    Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),
+                    ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)),
+                    Services = getHospitalService(h.Services, hospitalService),
+                    Doctors = type == "0" ? getDoctors(h.HospitalId, diseaseType, ref _filterDoctor) : null,
+                    Likes = feedback.Where(x => x.ILike == true).Count(),
+                    Feedbacks = feedback.Count(),
+                    BookingUrl = $"booking /{h.HospitalId}",
+                    ProfileDetailUrl = $"hospitalDetails/{h.HospitalId}",
+                };
+                _hospitalServices.AddRange(_hospital.Services);
+                _hospitalAmenities.AddRange(_hospital.Amenities);
+                _hospitals.Add(_hospital);
+            }
+            var Services = _hospitalServices.Select(x => new TblHospitalServices { Id = x.Id, HospitalServices = x.HospitalServices }).Distinct().ToList();
+            _filterDoctor.Services = Services;
+            _filterHospital.Services = Services;
+            _filterHospital.Amenities = _hospitalAmenities.Select(x => new TblHospitalAmenities { Id = x.Id, HospitalAmenities = x.HospitalAmenities }).Distinct().ToList();
+            return _hospitals;
+        }
+        #endregion
     }
 }
 
