@@ -20,10 +20,12 @@ namespace WebAPI.Entity
         public string ClientID { get; set; }
         [MaxLength(1000)]
         public string FeedbackDetails { get; set; }
-         
+
         public bool RecommendedDoctor { get; set; }
         [MaxLength(300)]
         public string Recommended { get; set; }
+
+        public bool ILike { get; set; }
 
         public bool IsDeleted { get; set; }
         [MaxLength(128)]
