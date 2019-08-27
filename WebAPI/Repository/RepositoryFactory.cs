@@ -102,6 +102,10 @@ namespace NoorCare.Repository
                     {
                         return new DoctorAvailableTimeRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(IContactUsRepository))
+                    {
+                        return new ContactUsRepository() as TRepository;
+                    }
                     
                     return null;
                 default:

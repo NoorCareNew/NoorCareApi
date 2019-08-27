@@ -248,7 +248,6 @@ namespace WebAPI.Controllers
                      PostCode = h.PostCode,
                      Landmark = h.Landmark,
                      InsuranceCompanies = h.InsuranceCompanies,
-                     //hospitalAmenitie
                      //Amenities = h.Amenities,
                      AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),//h.Amenities,
                      Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),//  h.Services,
