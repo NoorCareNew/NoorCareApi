@@ -14,10 +14,10 @@ namespace WebAPI.Entity
 
         [MaxLength(50)]
         public string FeedbackID { get; set; }
-        [MaxLength(50)]
-        public string DoctorID { get; set; }
+        
         [MaxLength(50)]
         public string ClientID { get; set; }
+
         [MaxLength(1000)]
         public string FeedbackDetails { get; set; }
 

@@ -251,12 +251,13 @@ namespace WebAPI.Controllers
             List<Price> _priceses = new List<Price>();
             Doctors _doctor = new Doctors();
             List<Doctors> _doctors = new List<Doctors>();
-            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId);
-                //.Where(x => x.Specialization.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
+            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId)
+             .Where(x=> x.Specialization.Where(s=> diesiesTypes.Contains(x.Specialization)).ToList().Count() > 0).ToList();
+            //.Where(x => x.Specialization.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
             var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
             foreach (var d in doctors ?? new List<Doctor>())
             {
-                var feedback = _feedbackRepo.Find(x => x.DoctorID == d.DoctorId);
+                var feedback = _feedbackRepo.Find(x => x.PageId == d.DoctorId);
                 _doctor = new Doctors
                 {
                     DoctorId = d.DoctorId,
@@ -306,7 +307,7 @@ namespace WebAPI.Controllers
 
             foreach (var h in hospitals ?? new List<HospitalDetails>())
             {
-               var feedback = _feedbackRepo.Find(x => x.DoctorID == h.HospitalId);
+               var feedback = _feedbackRepo.Find(x => x.PageId == h.HospitalId);
                 _hospital = new Hospital
                 {
                     HospitalId = h.HospitalId,
