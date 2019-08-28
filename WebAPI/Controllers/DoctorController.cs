@@ -200,7 +200,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [Route("api/result/{type?}{cityId?}/{countryId?}/{diseaseType?}")]
+        [Route("api/result/{type?}/{cityId?}/{countryId?}/{diseaseType?}")]
         [HttpGet]
         [AllowAnonymous]
         public HttpResponseMessage getDoctorDetail(string type = "0",string cityId = "0", string countryId = "0", string diseaseType = "0")
@@ -251,8 +251,8 @@ namespace WebAPI.Controllers
             List<Price> _priceses = new List<Price>();
             Doctors _doctor = new Doctors();
             List<Doctors> _doctors = new List<Doctors>();
-            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId)
-                .Where(x => x.Specialization.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
+            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId);
+                //.Where(x => x.Specialization.Where(c => myInts.Contains(c)).ToList().Count() > 0).ToList();
             var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
             foreach (var d in doctors ?? new List<Doctor>())
             {
