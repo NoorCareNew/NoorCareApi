@@ -1,5 +1,6 @@
 ﻿using NoorCare.Repository;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -83,5 +84,47 @@ namespace WebAPI.Controllers
 
             return result.Id;
         }
+
+        //ContactUs from Doctor Details/ Hospital Details
+        [Route("api/feedback/contactUs")]
+        [HttpPost]
+        [AllowAnonymous]
+        // POST: api/feedback
+        public HttpResponseMessage SaveContactUs(ContactUs obj)
+        {
+            IContactUsRepository _contactUsRepo = RepositoryFactory.Create<IContactUsRepository>(ContextTypes.EntityFramework);
+            var _contactUsCreated = _contactUsRepo.Insert(obj);
+
+            //var msg = "Thank You for contacting NoorCare. Our representative will get back to you within 24 hours.";
+            //string uri = "http://sms.mevite.in/sms/api.php?username=test&password=514802&sender=TRVDHA&sendto=91" + obj.MobileNumber + "&message=" + msg;
+            //sendSMS(uri);
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, obj.Id);
+        }
+
+        private void sendSMS(string uri)
+        {
+            string response = string.Empty;
+
+            HttpWebRequest req = WebRequest.Create(new Uri(uri)) as HttpWebRequest;
+            req.KeepAlive = false;
+            req.Method = "GET";
+            req.ContentType = "application/json";
+            try
+            {
+                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+                using (StreamReader loResponseStream = new StreamReader(resp.GetResponseStream())) //, enc
+                {
+                    response = loResponseStream.ReadToEnd();
+                    loResponseStream.Close();
+                    resp.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+            }
+        }
+
     }
 }

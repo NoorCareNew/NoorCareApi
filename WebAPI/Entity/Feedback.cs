@@ -27,6 +27,9 @@ namespace WebAPI.Entity
 
         public bool ILike { get; set; }
 
+        [MaxLength(50)]
+        public string PageId { get; set; }
+
         public bool IsDeleted { get; set; }
         [MaxLength(128)]
         public string CreatedBy { get; set; }
@@ -34,5 +37,27 @@ namespace WebAPI.Entity
         public string ModifiedBy { get; set; }
         public DateTime DateEntered { get; set; }
         public DateTime DateModified { get; set; }
+    }
+
+
+
+    [Serializable]
+    [Table("ContactUs")]
+    public class ContactUs : IEntity<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        [MaxLength(200)]
+        public string FullName { get; set; }
+
+        [MaxLength(20)]
+        public string MobileNumber { get; set; }
+
+        [MaxLength(500)]
+        public string Message { get; set; }
+
+        [MaxLength(50)]
+        public string PageId { get; set; }
+        
     }
 }

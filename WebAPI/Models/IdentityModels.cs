@@ -53,6 +53,8 @@ namespace WebAPI.Models
             modelBuilder.Entity<TblHospitalServices>().ToTable("TblHospitalServices");
             modelBuilder.Entity<TblHospitalSpecialties>().ToTable("TblHospitalSpecialties");
             modelBuilder.Entity<DoctorAvailableTime>().ToTable("DoctorAvailableTime");
+            modelBuilder.Entity<ContactUs>().ToTable("ContactUs");
+            
         }
     }
 }
