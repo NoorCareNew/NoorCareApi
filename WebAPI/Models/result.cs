@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebAPI.Entity;
+using WebAPI.Models;
 
 namespace WebAPI.Models
 {
@@ -13,32 +14,26 @@ namespace WebAPI.Models
         public FilterDoctor FilterDoctor { get; set; }
     }
 
-    public class PriceRange
-    {
-        public int min { get; set; }
-        public int max { get; set; }
-    }
-
-    public class Price
-    {
-        public int price { get; set; }
-       
-    }
     public class CommanFilterHospital
     {
-        public List<TblHospitalServices> Services { get; set; }
+        public List<FilterData> Services { get; set; }
+        public List<FilterData> Specialization { get; set; }
 
     }
     public class FilterHospital: CommanFilterHospital
     {
-        public List<TblHospitalAmenities> Amenities { get; set; }
+        public List<FilterData> Amenities { get; set; }
     }
 
     public class FilterDoctor : CommanFilterHospital
     {
-        public List<Disease> Specialization { get; set; }
-        public PriceRange PriceRange { get; set; }
-        public List<Price> Price { get; set; }
+        public List<decimal> Price { get; set; }
+    }
+
+    public class FilterData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class Hospital
