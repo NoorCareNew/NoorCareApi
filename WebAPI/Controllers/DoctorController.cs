@@ -274,7 +274,7 @@ namespace WebAPI.Controllers
                     AboutUs = d.AboutUs,
                     Likes = feedback.Where(x => x.ILike == true).Count(),
                     Feedbacks = feedback.Count(),
-                    BookingUrl = $"booking /{d.DoctorId}",
+                    BookingUrl = $"booking/{d.DoctorId}",
                     ProfileDetailUrl = $"doctorDetails/{d.DoctorId}",
                 };
 
