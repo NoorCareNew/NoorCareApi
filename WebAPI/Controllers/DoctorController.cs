@@ -246,9 +246,7 @@ namespace WebAPI.Controllers
 
             int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
             List<Disease> _disease = new List<Disease>();
-            Price _price = new Price();
-            PriceRange _priceRange = new PriceRange();
-            List<Price> _priceses = new List<Price>();
+            List<decimal> _priceses = new List<decimal>();
             Doctors _doctor = new Doctors();
             List<Doctors> _doctors = new List<Doctors>();
             List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId)
@@ -277,21 +275,18 @@ namespace WebAPI.Controllers
                     AboutUs = d.AboutUs,
                     Likes = feedback.Where(x => x.ILike == true).Count(),
                     Feedbacks = feedback.Count(),
-                    BookingUrl = $"booking /{d.DoctorId}",
+                    BookingUrl = $"booking/{d.DoctorId}",
                     ProfileDetailUrl = $"doctorDetails/{d.DoctorId}",
+                    ImgUrl = $"{constant.imgUrl}/Doctor/{d.DoctorId}.Jpeg"
                 };
 
                 // Add Filter Value
-                _priceRange.max = Convert.ToInt32(Math.Max(0, d.FeeMoney));
-                _priceRange.min = Convert.ToInt32(Math.Max(d.FeeMoney, d.FeeMoney));
-                _price = new Price { price = Convert.ToInt32(d.FeeMoney) };
-                _priceses.Add(_price);
+                _priceses.Add(d.FeeMoney);
                 _disease.AddRange(_doctor.Specialization);
                 _doctors.Add(_doctor);
             }
-            _filterDoctor.PriceRange = _priceRange;
             _filterDoctor.Price = _priceses;
-            _filterDoctor.Specialization = _disease.Select(x => new Disease { Id = x.Id, DiseaseType = x.DiseaseType }).Distinct().ToList();
+            _filterDoctor.Specialization = _disease.Select(x => new FilterData { Id = x.Id, Name = x.DiseaseType }).Distinct().ToList();
             return _doctors;
         }
         private List<Hospital> getHospital(string type, string cityId, string countryId, string diseaseType, ref FilterDoctor _filterDoctor, ref FilterHospital _filterHospital)
@@ -335,17 +330,19 @@ namespace WebAPI.Controllers
                     Doctors = type == "0" ? getDoctors(h.HospitalId, diseaseType, ref _filterDoctor) : null,
                     Likes = feedback.Where(x => x.ILike == true).Count(),
                     Feedbacks = feedback.Count(),
-                    BookingUrl = $"booking /{h.HospitalId}",
+                    BookingUrl = $"booking/{h.HospitalId}",
                     ProfileDetailUrl = $"hospitalDetails/{h.HospitalId}",
+                    ImgUrl = $"{constant.imgUrl}/Hospital/{h.HospitalId}.Jpeg"
                 };
                 _hospitalServices.AddRange(_hospital.Services);
                 _hospitalAmenities.AddRange(_hospital.Amenities);
                 _hospitals.Add(_hospital);
             }
-            var Services = _hospitalServices.Select(x => new TblHospitalServices { Id = x.Id, HospitalServices = x.HospitalServices }).Distinct().ToList();
+            var Services = _hospitalServices.Select(x => new FilterData { Id = x.Id, Name = x.HospitalServices }).Distinct().ToList();
             _filterDoctor.Services = Services;
             _filterHospital.Services = Services;
-            _filterHospital.Amenities = _hospitalAmenities.Select(x => new TblHospitalAmenities { Id = x.Id, HospitalAmenities = x.HospitalAmenities }).Distinct().ToList();
+            _filterHospital.Amenities = _hospitalAmenities.Select(x => new FilterData { Id = x.Id, Name = x.HospitalAmenities }).Distinct().ToList();
+           // _filterHospital.Specialization = _filterDoctor.Specialization;
             return _hospitals;
         }
         #endregion
