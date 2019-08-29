@@ -29,7 +29,6 @@ namespace WebAPI.Controllers
         ITblHospitalAmenitiesRepository _hospitalAmenitieRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
         IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
 
-
         [Route("api/doctor/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -174,7 +173,6 @@ namespace WebAPI.Controllers
 
         private int getTableId(string doctorId)
         {
-            //IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
             var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
 
             return result.Id;
