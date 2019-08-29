@@ -66,6 +66,7 @@ namespace WebAPI.Models
         public int Feedbacks { get; set; }
         public string BookingUrl { get; set; }
         public string ProfileDetailUrl { get; set; }
+        public string ImgUrl { get; set; }
     }
 
     public class Doctors
@@ -91,5 +92,6 @@ namespace WebAPI.Models
         public int Feedbacks { get; set; }
         public string BookingUrl { get; set; }
         public string ProfileDetailUrl { get; set; }
+        public string ImgUrl { get; set; }
     }
 }

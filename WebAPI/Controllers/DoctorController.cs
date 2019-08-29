@@ -276,6 +276,7 @@ namespace WebAPI.Controllers
                     Feedbacks = feedback.Count(),
                     BookingUrl = $"booking/{d.DoctorId}",
                     ProfileDetailUrl = $"doctorDetails/{d.DoctorId}",
+                    ImgUrl = $"{constant.imgUrl}/Doctor/{d.DoctorId}.Jpeg"
                 };
 
                 // Add Filter Value
@@ -328,8 +329,9 @@ namespace WebAPI.Controllers
                     Doctors = type == "0" ? getDoctors(h.HospitalId, diseaseType, ref _filterDoctor) : null,
                     Likes = feedback.Where(x => x.ILike == true).Count(),
                     Feedbacks = feedback.Count(),
-                    BookingUrl = $"booking /{h.HospitalId}",
+                    BookingUrl = $"booking/{h.HospitalId}",
                     ProfileDetailUrl = $"hospitalDetails/{h.HospitalId}",
+                    ImgUrl = $"{constant.imgUrl}/Hospital/{h.HospitalId}.Jpeg"
                 };
                 _hospitalServices.AddRange(_hospital.Services);
                 _hospitalAmenities.AddRange(_hospital.Amenities);
@@ -339,6 +341,7 @@ namespace WebAPI.Controllers
             _filterDoctor.Services = Services;
             _filterHospital.Services = Services;
             _filterHospital.Amenities = _hospitalAmenities.Select(x => new FilterData { Id = x.Id, Name = x.HospitalAmenities }).Distinct().ToList();
+           // _filterHospital.Specialization = _filterDoctor.Specialization;
             return _hospitals;
         }
         #endregion
