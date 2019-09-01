@@ -25,6 +25,9 @@ namespace WebAPI.Entity
         public string TimingId { get; set; }
 
         [MaxLength(50)]
+        public string AppointmentDate { get; set; }
+        
+        [MaxLength(50)]
         public string ClientId { get; set; }
 
         [MaxLength(50)]
@@ -35,7 +38,8 @@ namespace WebAPI.Entity
         [MaxLength(500)]
         public string Comment { get; set; }
 
-        public bool IsActive { get; set; }
+        [MaxLength(50)]
+        public string Status { get; set; }
 
         public bool IsDeleted { get; set; }
         [MaxLength(128)]

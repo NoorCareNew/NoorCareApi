@@ -21,15 +21,13 @@ namespace NoorCare.Repository
     public class DoctorRepository : EFRepositoryBase<ApplicationDbContext,Doctor,int>, IDoctorRepository { }
     public class SecretaryRepository : EFRepositoryBase<ApplicationDbContext, Secretary, int>, ISecretaryRepository { }
     public class FeedbackRepository : EFRepositoryBase<ApplicationDbContext, Feedback, int>, IFeedbackRepository { }
-    public class AppointmentRepository : EFRepositoryBase<ApplicationDbContext, Appointment, int>, IAppointmentRepository { }
-    
-
+    public class AppointmentRepository : EFRepositoryBase<ApplicationDbContext, Appointment, int>, IAppointmentRepository { }  
     public class TblHospitalSpecialtiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalSpecialties, int>, ITblHospitalSpecialtiesRepository { }
     public class TblHospitalServicesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalServices, int>, ITblHospitalServicesRepository { }
     public class TblHospitalAmenitiesRepository : EFRepositoryBase<ApplicationDbContext, TblHospitalAmenities, int>, ITblHospitalAmenitiesRepository { }
     public class DoctorAvailableTimeRepository : EFRepositoryBase<ApplicationDbContext, DoctorAvailableTime, int>, IDoctorAvailableTimeRepository { }
     public class ContactUsRepository : EFRepositoryBase<ApplicationDbContext, ContactUs, int>, IContactUsRepository { }
-
+    public class TimeMasterRepository : EFRepositoryBase<ApplicationDbContext, TimeMaster, int>, ITimeMasterRepository { }
     
 }
 

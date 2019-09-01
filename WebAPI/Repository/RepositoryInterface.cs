@@ -26,5 +26,5 @@ namespace WebAPI.Repository
     public interface ITblHospitalSpecialtiesRepository : IRepository<TblHospitalSpecialties, int> { }
     public interface IDoctorAvailableTimeRepository : IRepository<DoctorAvailableTime, int> { }
     public interface IContactUsRepository : IRepository<ContactUs, int> { }
-    
+    public interface ITimeMasterRepository : IRepository<TimeMaster, int> { }
 }

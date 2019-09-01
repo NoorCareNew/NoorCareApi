@@ -25,13 +25,13 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/feedback/getdetail/{feedbackId}")]
+        [Route("api/feedback/getdetail/{feedbackId}/{pageId}")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/feedback/5
-        public HttpResponseMessage GetDetail(string feedbackId)
+        public HttpResponseMessage GetDetail(string feedbackId, string pageId)
         {
-            var result = _feedbackRepo.Find(x => x.FeedbackID == feedbackId).FirstOrDefault();
+            var result = _feedbackRepo.Find(x => x.FeedbackID == feedbackId && x.PageId== pageId).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);            
         }
 
