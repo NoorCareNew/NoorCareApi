@@ -215,7 +215,7 @@ namespace WebAPI.Controllers
         {
             var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
             Doctor d = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
-            var feedback = _feedbackRepo.Find(x => x.DoctorID == doctorid);
+            var feedback = _feedbackRepo.Find(x => x.PageId == doctorid);
             var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
             var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
             HospitalDetails hospitals = _hospitaldetailsRepo.Find(x => x.HospitalId == d.HospitalId).FirstOrDefault();
@@ -242,8 +242,8 @@ namespace WebAPI.Controllers
                     Specialization = getSpecialization(d.Specialization, disease),
                     Amenities = getHospitalAmenities(hospitals.Amenities, hospitalAmenitie),
                     Services = getHospitalService(hospitals.Services, hospitalService),
-                    Feedback = _feedbackRepo.Find(x => x.DoctorID == doctorid),
-                    Likes = _feedbackRepo.Find(x => x.DoctorID == doctorid && x.ILike == true).Count(),
+                    Feedback = _feedbackRepo.Find(x => x.PageId == doctorid),
+                    Likes = _feedbackRepo.Find(x => x.PageId == doctorid && x.ILike == true).Count(),
                     location = "",
                     ImgUrl = $"{constant.imgUrl}/Doctor/{d.DoctorId}.Jpeg",
                     website = hospitals.Website,
