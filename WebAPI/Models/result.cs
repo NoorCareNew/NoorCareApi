@@ -89,12 +89,23 @@ namespace WebAPI.Models
         public string AgeGroupGender { get; set; }
         public string Degree { get; set; }
         public int[] SpecializationIds { get; set; }
-        public List<Disease> Specialization { get; set; }
         public string AboutUs { get; set; }
-        public FilterDoctor FilterDoctor { get; set; }
         public int Likes { get; set; }
         public int Feedbacks { get; set; }
         public string BookingUrl { get; set; }
         public string ProfileDetailUrl { get; set; }
+        public string ImgUrl { get; set; }
+        public string HospitalName { get; set; }
+        public string location { get; set; }
+        public string aboutMe { get; set; }
+        public string website { get; set; }
+        public string Address { get; set; }
+        public List<DoctorAvailableTime> DoctorAvilability { get; set; }
+        public FilterDoctor FilterDoctor { get; set; }
+        public List<Disease> Specialization { get; set; }
+        public List<Feedback> Feedback { get; set; }
+        public List<TblHospitalAmenities> Amenities { get; set; }
+        public List<TblHospitalServices> Services { get; set; }
+        
     }
 }

@@ -66,6 +66,17 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
+        [Route("api/doctorDetails/{doctorid}")]
+        [HttpGet]
+        [AllowAnonymous]
+        // GET: api/Doctor/5
+        public HttpResponseMessage DoctorDetails(string doctorid)
+        {
+            var result = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
         [Route("api/doctor/getdetail/{doctorid}")]
         [HttpGet]
         [AllowAnonymous]
@@ -197,6 +208,54 @@ namespace WebAPI.Controllers
         {
             var result = _doctorAvailabilityRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
+        [Route("api/doctor/doctorDetails/{doctorid}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage doctorDetails(string doctorid)
+        {
+            var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
+            Doctor d = _doctorRepo.Find(x => x.DoctorId == doctorid).FirstOrDefault();
+            var feedback = _feedbackRepo.Find(x => x.DoctorID == doctorid);
+            var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
+            var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
+            HospitalDetails hospitals = _hospitaldetailsRepo.Find(x => x.HospitalId == d.HospitalId).FirstOrDefault();
+            if (d != null)
+            {
+                Doctors _doctor = new Doctors
+                {
+                    DoctorId = d.DoctorId,
+                    FirstName = d.FirstName,
+                    LastName = d.LastName,
+                    Email = d.Email,
+                    PhoneNumber = d.PhoneNumber,
+                    AlternatePhoneNumber = d.AlternatePhoneNumber,
+                    Gender = d.Gender,
+                    Experience = d.Experience,
+                    FeeMoney = d.FeeMoney,
+                    Language = d.Language,
+                    AgeGroupGender = d.AgeGroupGender,
+                    Degree = d.Degree,
+                    AboutUs = d.AboutUs,
+                    HospitalName = hospitals.HospitalName,
+                    aboutMe = d.AboutUs,
+                    DoctorAvilability = _doctorAvailabilityRepo.Find(x => x.DoctorId == d.DoctorId),
+                    Specialization = getSpecialization(d.Specialization, disease),
+                    Amenities = getHospitalAmenities(hospitals.Amenities, hospitalAmenitie),
+                    Services = getHospitalService(hospitals.Services, hospitalService),
+                    Feedback = _feedbackRepo.Find(x => x.DoctorID == doctorid),
+                    Likes = _feedbackRepo.Find(x => x.DoctorID == doctorid && x.ILike == true).Count(),
+                    location = "",
+                    ImgUrl = $"{constant.imgUrl}/Doctor/{d.DoctorId}.Jpeg",
+                    website = hospitals.Website,
+                    Address = hospitals.Address
+                };
+                return Request.CreateResponse(HttpStatusCode.Accepted, _doctor);
+
+            }
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+
         }
 
 
