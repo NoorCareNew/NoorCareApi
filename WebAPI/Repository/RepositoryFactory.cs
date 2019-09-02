@@ -108,7 +108,7 @@ namespace NoorCare.Repository
                     }
                     if (typeof(TRepository) == typeof(ITimeMasterRepository))
                     {
-                        return new ContactUsRepository() as TRepository;
+                        return new TimeMasterRepository() as TRepository;
                     }
                     
                     return null;
