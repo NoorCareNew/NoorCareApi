@@ -28,7 +28,8 @@ namespace NoorCare.Repository
     public class DoctorAvailableTimeRepository : EFRepositoryBase<ApplicationDbContext, DoctorAvailableTime, int>, IDoctorAvailableTimeRepository { }
     public class ContactUsRepository : EFRepositoryBase<ApplicationDbContext, ContactUs, int>, IContactUsRepository { }
     public class TimeMasterRepository : EFRepositoryBase<ApplicationDbContext, TimeMaster, int>, ITimeMasterRepository { }
-    
+    public class PatientPrescriptionRepository : EFRepositoryBase<ApplicationDbContext, PatientPrescription, int>, IPatientPrescriptionRepository { }
+
 }
 
 

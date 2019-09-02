@@ -201,6 +201,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
+    <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\MasterController.cs" />
     <Compile Include="Controllers\FeedbackController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />

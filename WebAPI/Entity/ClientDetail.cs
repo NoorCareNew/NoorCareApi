@@ -31,3 +31,25 @@ public partial class ClientDetail : IEntity<int>
     public int PinCode { get; set; }
 }
 
+[Serializable]
+[Table("PatientPrescription")]
+public class PatientPrescription : IEntity<int>
+{
+    [Key]
+    public int Id { get; set; }
+    [MaxLength(50)]
+    public string PatientId { get; set; }
+    
+    public string Prescription { get; set; }
+
+    public bool IsDeleted { get; set; }
+    [MaxLength(50)]
+    public string CreatedBy { get; set; }
+    [MaxLength(50)]
+    public string ModifiedBy { get; set; }
+    [MaxLength(50)]
+    public string DateEntered { get; set; }
+    [MaxLength(50)]
+    public string DateModified { get; set; }
+}
+
