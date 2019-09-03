@@ -1,7 +1,4 @@
-﻿using AngularJSAuthentication.API.Services;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NoorCare.Repository;
+﻿using NoorCare.Repository;
 using System;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,8 +8,6 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.OData;
-using WebAPI.Entity;
-using WebAPI.Models;
 using WebAPI.Repository;
 using WebAPI.Services;
 
