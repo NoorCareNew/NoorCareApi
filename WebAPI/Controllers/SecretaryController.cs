@@ -126,9 +126,9 @@ namespace WebAPI.Controllers
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Secretary/5
-        public HttpResponseMessage Delete(string doctorid)
+        public HttpResponseMessage Delete(string secretaryId)
         {
-            int tbleId = getTableId(doctorid);
+            int tbleId = getTableId(secretaryId);
 
             ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var result = _secretaryRepo.Delete(tbleId);
