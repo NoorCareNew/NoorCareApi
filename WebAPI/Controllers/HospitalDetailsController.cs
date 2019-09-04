@@ -16,8 +16,10 @@ namespace WebAPI.Controllers
     public class HospitalDetailsController : ApiController
     {
         IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+        IHospitalDetailsRepository _getHospitaldetailsList = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
         ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
         Registration _registration = new Registration();
+
         [Route("api/hospitaldetails/getall")]
         [HttpGet]
         [AllowAnonymous]
@@ -39,7 +41,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("api/hospitaldetails/uploadprofilepic")]
+        [Route("api/hospitaldetails/UploadProfilePic")]
         [AllowAnonymous]
         public IHttpActionResult UploadProfilePic()
         {
@@ -86,7 +88,7 @@ namespace WebAPI.Controllers
         // DELETE: api/HospitalDetails/5
         public HttpResponseMessage Delete(string hospitalid)
         {
-            int tblId= getTableId(hospitalid);
+            int tblId = _getHospitaldetailsList.Find(h => h.HospitalId == hospitalid).FirstOrDefault().Id; // getTableId(hospitalid);
             var result = _hospitaldetailsRepo.Delete(tblId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -98,7 +100,6 @@ namespace WebAPI.Controllers
         // PUT: api/UpdateHospitalProfile/5
         public IHttpActionResult UpdateHospitalProfile(string hospitalId, Delta<HospitalDetails> obj)
         {
-
             HospitalDetails _hospitalDetails = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId).FirstOrDefault();
             obj.Patch(_hospitalDetails);
             var result = _hospitaldetailsRepo.Update(_hospitalDetails);
@@ -106,11 +107,11 @@ namespace WebAPI.Controllers
         }
 
 
-        private int getTableId(string hospitalId)
-        {
-            var result = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId).FirstOrDefault();
+        //private int getTableId(string hospitalId)
+        //{
+        //    var result = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId).FirstOrDefault();
 
-            return result.Id;
-        }
+        //    return result.Id;
+        //}
     }
 }

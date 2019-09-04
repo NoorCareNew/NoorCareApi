@@ -175,6 +175,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientDocument\" />
+    <Folder Include="ProfilePic\Doctor\" />
     <Folder Include="ProfilePic\Secretary\" />
   </ItemGroup>
   <ItemGroup>

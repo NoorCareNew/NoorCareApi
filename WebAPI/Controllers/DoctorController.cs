@@ -22,6 +22,7 @@ namespace WebAPI.Controllers
     {
         Registration _registration = new Registration();
         IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+        IDoctorRepository _getDoctorList = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
         IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
         IDoctorAvailableTimeRepository _doctorAvailabilityRepo = RepositoryFactory.Create<IDoctorAvailableTimeRepository>(ContextTypes.EntityFramework);
         IDiseaseRepository _diseaseDetailRepo = RepositoryFactory.Create<IDiseaseRepository>(ContextTypes.EntityFramework);
@@ -165,8 +166,7 @@ namespace WebAPI.Controllers
         // PUT: api/Doctor/5
         public HttpResponseMessage Update(Doctor obj)
         {
-            int tbleId = getTableId(obj.DoctorId);
-            obj.Id = tbleId;
+            obj.Id = _getDoctorList.Find(x => x.DoctorId == obj.DoctorId).FirstOrDefault().Id;
             var result = _doctorRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -177,17 +177,16 @@ namespace WebAPI.Controllers
         // DELETE: api/Doctor/5
         public HttpResponseMessage Delete(string doctorid)
         {
-            int tbleId = getTableId(doctorid);
+            int tbleId = _getDoctorList.Find(x => x.DoctorId == doctorid).FirstOrDefault().Id;
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        private int getTableId(string doctorId)
-        {
-            var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
-
-            return result.Id;
-        }
+        //private int getTableId(string doctorId)
+        //{
+        //    var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
+        //    return result.Id;
+        //}
 
         //---------------- Doctor Availability
         [Route("api/doctor/doctorAvailablity")]

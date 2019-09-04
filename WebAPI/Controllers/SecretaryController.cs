@@ -19,17 +19,16 @@ namespace WebAPI.Controllers
 {
     public class SecretaryController : ApiController
     {
-
+        ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+        ISecretaryRepository _getSecretaryList = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
         Registration _registration = new Registration();
+
         [Route("api/secretary/getall")]
         [HttpGet]
         [AllowAnonymous]
-        // GET: api/Secretary
         public HttpResponseMessage GetAll()
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var result = _secretaryRepo.GetAll().ToList();
-
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
@@ -39,7 +38,6 @@ namespace WebAPI.Controllers
         // GET: api/Secretary/5
         public HttpResponseMessage GetDetail(string secretaryId)
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -61,7 +59,6 @@ namespace WebAPI.Controllers
             user.PasswordHash = password;
             _registration.sendRegistrationEmail(user);
             obj.SecretaryId = user.Id;
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             var _sectiryCreated = _secretaryRepo.Insert(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, obj.SecretaryId);
         }
@@ -105,7 +102,6 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public IHttpActionResult getSecretaryProfile(string secretaryId)
         {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
             return Ok(_secretaryRepo.Find(x => x.SecretaryId == secretaryId));
         }
         
@@ -115,10 +111,7 @@ namespace WebAPI.Controllers
         // PUT: api/Secretary/5
         public HttpResponseMessage Update(Secretary obj)
         {
-            int tbleId = getTableId(obj.SecretaryId);
-            obj.Id = tbleId;
-
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            obj.Id = _getSecretaryList.Find(s=>s.SecretaryId==obj.SecretaryId).FirstOrDefault().Id;
             var result = _secretaryRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -126,22 +119,17 @@ namespace WebAPI.Controllers
         [Route("api/secretary/delete/{secretaryId}")]
         [HttpDelete]
         [AllowAnonymous]
-        // DELETE: api/Secretary/5
         public HttpResponseMessage Delete(string secretaryId)
         {
-            int tbleId = getTableId(secretaryId);
-
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
+            int tbleId = _getSecretaryList.Find(s => s.SecretaryId == secretaryId).FirstOrDefault().Id;
             var result = _secretaryRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        private int getTableId(string secretaryId)
-        {
-            ISecretaryRepository _secretaryRepo = RepositoryFactory.Create<ISecretaryRepository>(ContextTypes.EntityFramework);
-            var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
-
-            return result.Id;
-        }
+        //private int getTableId(string secretaryId)
+        //{
+        //    var result = _secretaryRepo.Find(x => x.SecretaryId == secretaryId).FirstOrDefault();
+        //    return result.Id;
+        //}
     }
 }
