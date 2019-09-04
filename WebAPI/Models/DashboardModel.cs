@@ -1,30 +1,14 @@
-﻿using AngularJSAuthentication.API.Services;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NoorCare.Repository;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using WebAPI.Entity;
-using WebAPI.Models;
-using WebAPI.Repository;
-using WebAPI.Services;
+﻿using System.Collections.Generic;
 namespace WebAPI.Models
 {
     public class DashboardModel
     {
-        public SecratoryDashboardModel SecratoryDashboardModel { get; set; }
-        public List<SecratoryDashboardAppointmentListModel> SecratoryDashboardAppointmentListModel { get; set; }
-        
+        public DashboardTypeModel DashboardTypeModel { get; set; }
+        public List<DashboardAppointmentListModel> DashboardAppointmentListModel { get; set; }
+
     }
 
-    public class SecratoryDashboardModel
+    public class DashboardTypeModel
     {
         public string HospitalId { get; set; }
         public int TotalDoctor { get; set; }
@@ -35,7 +19,8 @@ namespace WebAPI.Models
         public int DoctorOnLeave { get; set; }
         public int TotalFeedback { get; set; }
     }
-    public class SecratoryDashboardAppointmentListModel
+
+    public class DashboardAppointmentListModel
     {
         public string AppointmentDate { get; set; }
         public string AppointmentTime { get; set; }

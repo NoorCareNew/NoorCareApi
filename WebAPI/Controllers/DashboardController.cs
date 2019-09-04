@@ -26,65 +26,84 @@ namespace WebAPI.Controllers
         IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
         ITimeMasterRepository _timeMasterRepo = RepositoryFactory.Create<ITimeMasterRepository>(ContextTypes.EntityFramework);
         IClientDetailRepository _clientDetailRepo = RepositoryFactory.Create<IClientDetailRepository>(ContextTypes.EntityFramework);
-        
+        IHospitalDetailsRepository _hospitaldetailsRepo = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
+
         [HttpGet]
-        [Route("api/GetDashboardDetails/{Type}/{pageId}/{searchDate?}")] //Type= Doctor/Secratory, page Id is secratoryId
+        [Route("api/GetDashboardDetails/{Type}/{pageId}/{searchDate?}")] //Type= Doctor/secretary, page Id is secratoryId
         [AllowAnonymous]
         public HttpResponseMessage GetDashboardDetails(string Type,string pageId, string searchDate = null)
         {
-            var HospitalId = _secretaryRepo.GetAll().Find(s => s.SecretaryId == pageId).HospitalId;
-            SecratoryDashboardModel secratoryDashboardModel = new SecratoryDashboardModel();
+            var HospitalId = "";
+            if (Type.ToLower() == "secretary")
+            {
+                HospitalId = _secretaryRepo.Find(s => s.SecretaryId == pageId).FirstOrDefault().HospitalId;
+            }
+            else if(Type.ToLower() == "doctor")
+            {
+                HospitalId = _doctorRepo.Find(d => d.DoctorId == pageId).FirstOrDefault().HospitalId;
+            }
+            else if (Type.ToLower() == "hospital")
+            {
+                HospitalId = pageId;
+            }
+
+            DashboardTypeModel DashboardTypeModel = new DashboardTypeModel();
             DashboardModel dashboardModel = new DashboardModel();
-            List<SecratoryDashboardAppointmentListModel> lstSecratoryDashboardAppointmentListModel = new List<SecratoryDashboardAppointmentListModel>();
+            List<DashboardAppointmentListModel> lstDashboardAppointmentListModel = new List<DashboardAppointmentListModel>();
 
             if (!string.IsNullOrEmpty(HospitalId))
             {
-                secratoryDashboardModel.HospitalId = HospitalId;
+                DashboardTypeModel.HospitalId = HospitalId;
 
-                secratoryDashboardModel.TotalFeedback = _feedbackRepo.Find(x => x.PageId == HospitalId).ToList().Count();
+                DashboardTypeModel.TotalFeedback = _feedbackRepo.Find(x => x.PageId == HospitalId).ToList().Count();
 
-                secratoryDashboardModel.TotalDoctor = _doctorRepo.Find(d => d.HospitalId == HospitalId).ToList().Count();
+                DashboardTypeModel.TotalDoctor = _doctorRepo.Find(d => d.HospitalId == HospitalId).ToList().Count();
 
-                secratoryDashboardModel.BookedAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "booked").ToList().Count();
+                DashboardTypeModel.BookedAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "booked").ToList().Count();
 
-                secratoryDashboardModel.CancelAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "cancel").ToList().Count();
+                DashboardTypeModel.CancelAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "cancel").ToList().Count();
 
-                secratoryDashboardModel.NewAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "pending").ToList().Count();
+                DashboardTypeModel.NewAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "pending").ToList().Count();
 
-                secratoryDashboardModel.TodayAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "booked" && a.AppointmentDate == searchDate).ToList().Count();
+                DashboardTypeModel.TodayAppointment = _appointmentRepo.Find(a => a.HospitalId == HospitalId && a.Status == "booked" && a.AppointmentDate == searchDate).ToList().Count();
             }
             foreach (var item in _appointmentRepo.Find(a => a.HospitalId == HospitalId).ToList())
             {
-                SecratoryDashboardAppointmentListModel secratoryDashboardAppointmentListModel = new SecratoryDashboardAppointmentListModel();
+                DashboardAppointmentListModel DashboardAppointmentListModel = new DashboardAppointmentListModel();
 
-                secratoryDashboardAppointmentListModel.AppointmentDate = item.AppointmentDate;
-                secratoryDashboardAppointmentListModel.Status = item.Status;
-                secratoryDashboardAppointmentListModel.TimeId = item.TimingId;
-
+                DashboardAppointmentListModel.AppointmentDate = item.AppointmentDate;
+                DashboardAppointmentListModel.Status = item.Status;
+                DashboardAppointmentListModel.TimeId = item.TimingId;
+                int appointmentTimeId = Convert.ToInt32(item.TimingId);
                 if (_timeMasterRepo != null)
                 {
-                    secratoryDashboardAppointmentListModel.AppointmentTime = "";
+                    var timeDetails = _timeMasterRepo.Find(t => t.Id == appointmentTimeId && t.IsActive== true).FirstOrDefault();
+                    if (timeDetails != null)
+                    {
+                        DashboardAppointmentListModel.AppointmentTime = timeDetails.TimeFrom.Trim() + "-"+ timeDetails.TimeTo.Trim() + " "+ timeDetails.AM_PM.Trim();
+                    }
                 }
                 var clientDetail = _clientDetailRepo.Find(x => x.ClientId == item.ClientId).FirstOrDefault();
                 if (clientDetail != null)
                 {
-                    secratoryDashboardAppointmentListModel.DOB = clientDetail.DOB;
-                    secratoryDashboardAppointmentListModel.PatientName = clientDetail.FirstName;
+                    DashboardAppointmentListModel.DOB = clientDetail.DOB;
+                    DashboardAppointmentListModel.PatientName = clientDetail.FirstName;
 
-                    secratoryDashboardAppointmentListModel.NoorCareNumber = clientDetail.ClientId;
-                    secratoryDashboardAppointmentListModel.Gender = clientDetail.Gender.ToString();
+                    DashboardAppointmentListModel.NoorCareNumber = clientDetail.ClientId;
+                    DashboardAppointmentListModel.Gender = clientDetail.Gender.ToString();
                 }
 
-                secratoryDashboardAppointmentListModel.DoctorName = "";
-
-                lstSecratoryDashboardAppointmentListModel.Add(secratoryDashboardAppointmentListModel);
+                var doctorDetails = _doctorRepo.Find(d => d.DoctorId == item.DoctorId).FirstOrDefault();
+                if (doctorDetails != null)
+                {
+                    DashboardAppointmentListModel.DoctorName =doctorDetails.FirstName;
+                }
+                lstDashboardAppointmentListModel.Add(DashboardAppointmentListModel);
             }
 
-            dashboardModel.SecratoryDashboardModel = secratoryDashboardModel;
-            dashboardModel.SecratoryDashboardAppointmentListModel = lstSecratoryDashboardAppointmentListModel;
+            dashboardModel.DashboardTypeModel = DashboardTypeModel;
+            dashboardModel.DashboardAppointmentListModel = lstDashboardAppointmentListModel;
             return Request.CreateResponse(HttpStatusCode.Accepted, dashboardModel);
         }
-
-
     }
 }
