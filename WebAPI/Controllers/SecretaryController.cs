@@ -95,6 +95,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                return Ok(ex.Message);
             }
             return Ok(secretaryId);
         }
