@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/secretary/getdetail/{id}")]
+        [Route("api/secretary/getdetail/{secretaryId}")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Secretary/5
@@ -122,7 +122,7 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/secretary/delete/{doctorid}")]
+        [Route("api/secretary/delete/{secretaryId}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Secretary/5
