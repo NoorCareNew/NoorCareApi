@@ -122,7 +122,7 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/secretary/delete/{doctorid}")]
+        [Route("api/secretary/delete/{secretaryId}")]
         [HttpDelete]
         [AllowAnonymous]
         // DELETE: api/Secretary/5
