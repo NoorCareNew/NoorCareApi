@@ -181,13 +181,7 @@ namespace WebAPI.Controllers
             var result = _doctorRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
-
-        //private int getTableId(string doctorId)
-        //{
-        //    var result = _doctorRepo.Find(x => x.DoctorId == doctorId).FirstOrDefault();
-        //    return result.Id;
-        //}
-
+        
         //---------------- Doctor Availability
         [Route("api/doctor/doctorAvailablity")]
         [HttpPost]

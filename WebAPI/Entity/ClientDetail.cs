@@ -40,6 +40,9 @@ public class PatientPrescription : IEntity<int>
     [MaxLength(50)]
     public string PatientId { get; set; }
     
+    [MaxLength(50)]
+    public string DoctorId { get; set; }
+
     public string Prescription { get; set; }
 
     public bool IsDeleted { get; set; }

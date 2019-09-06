@@ -12,27 +12,25 @@ namespace WebAPI.Controllers
     public class AppointmentController : ApiController
     {
         Registration _registration = new Registration();
+        IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
+        IAppointmentRepository _getAppointmentList = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
+
         [Route("api/appointment/getall")]
         [HttpGet]
         [AllowAnonymous]
         // GET: api/Appointment
         public HttpResponseMessage GetAll()
         {
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
             var result =  _appointmentRepo.GetAll().ToList();
-
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [Route("api/appointment/getdetail/{appointmentid}")]
         [HttpGet]
         [AllowAnonymous]
-        // GET: api/Appointment/5
         public HttpResponseMessage GetDetail(string appointmentid)
         {
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
             var result = _appointmentRepo.Find(x => x.DoctorId == appointmentid).FirstOrDefault();
-
             return Request.CreateResponse(HttpStatusCode.Accepted, result);            
         }
 
@@ -46,7 +44,7 @@ namespace WebAPI.Controllers
             CountryCode countryCode = _countryCodeRepository.Find(x => x.Id == obj.CountryCode).FirstOrDefault();
             string AppointmentId= _registration.creatId(5, obj.CountryCode, 0);
             obj.AppointmentId = AppointmentId;
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
+
             var _appointmentCreated = _appointmentRepo.Insert(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, obj.AppointmentId);
         }
@@ -58,9 +56,7 @@ namespace WebAPI.Controllers
         // PUT: api/Appointment/5
         public HttpResponseMessage Update(Appointment obj)
         {
-            int tbleId = getTableId(obj.AppointmentId);
-            obj.Id = tbleId;
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
+            obj.Id = _getAppointmentList.Find(x => x.AppointmentId == obj.AppointmentId).FirstOrDefault().Id;
             var result = _appointmentRepo.Update(obj);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
@@ -71,19 +67,10 @@ namespace WebAPI.Controllers
         // DELETE: api/Appointment/5
         public HttpResponseMessage Delete(string appointmentid)
         {
-            int tbleId= getTableId(appointmentid);
+            int tbleId= _getAppointmentList.Find(x => x.AppointmentId == appointmentid).FirstOrDefault().Id;
 
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
             var result = _appointmentRepo.Delete(tbleId);
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
-        }
-
-        private int getTableId(string appointmentId)
-        {
-            IAppointmentRepository _appointmentRepo = RepositoryFactory.Create<IAppointmentRepository>(ContextTypes.EntityFramework);
-            var result = _appointmentRepo.Find(x => x.DoctorId == appointmentId).FirstOrDefault();
-
-            return result.Id;
         }
     }
 }
