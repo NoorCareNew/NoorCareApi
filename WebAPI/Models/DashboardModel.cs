@@ -18,6 +18,8 @@ namespace WebAPI.Models
         public int TodayAppointment { get; set; }
         public int DoctorOnLeave { get; set; }
         public int TotalFeedback { get; set; }
+        public int TotalDoctorPrescription { get; set; }
+        public int TotalMedicalFile { get; set; }
     }
 
     public class DashboardAppointmentListModel
