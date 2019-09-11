@@ -13,6 +13,8 @@ namespace WebAPI.Controllers
     public class FeedbackController : ApiController
     {
         IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
+        IFeedbackRepository _feedbackList = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
+        IContactUsRepository _contactUsRepo = RepositoryFactory.Create<IContactUsRepository>(ContextTypes.EntityFramework);
 
         [Route("api/feedback/getAllFeedback")]
         [HttpGet]
@@ -91,15 +93,41 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         // POST: api/feedback
         public HttpResponseMessage SaveContactUs(ContactUs obj)
-        {
-            IContactUsRepository _contactUsRepo = RepositoryFactory.Create<IContactUsRepository>(ContextTypes.EntityFramework);
+        {          
             var _contactUsCreated = _contactUsRepo.Insert(obj);
-
             //var msg = "Thank You for contacting NoorCare. Our representative will get back to you within 24 hours.";
-            //string uri = "http://sms.mevite.in/sms/api.php?username=test&password=514802&sender=TRVDHA&sendto=91" + obj.MobileNumber + "&message=" + msg;
+            //string uri = "";
             //sendSMS(uri);
 
             return Request.CreateResponse(HttpStatusCode.Accepted, obj.Id);
+        }
+
+        [Route("api/GetAllContactUs")]
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage GetAllContactUs()
+        {
+            var result = _contactUsRepo.GetAll().ToList();
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
+        [Route("api/GetContactUs/{Id}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage GetContactUs(int Id)
+        {
+            var result = _contactUsRepo.Find(x =>x.Id == Id).FirstOrDefault();
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
+
+        [Route("api/DeleteContactUs/{Id}")]
+        [HttpPost]
+        [AllowAnonymous]
+        public HttpResponseMessage DeleteContactUs(int Id)
+        {
+            var result = _contactUsRepo.Find(x => x.Id == Id).FirstOrDefault().IsDeleted= true;
+            
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         private void sendSMS(string uri)

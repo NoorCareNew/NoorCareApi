@@ -58,6 +58,22 @@ namespace WebAPI.Entity
 
         [MaxLength(50)]
         public string PageId { get; set; }
-        
+
+        [MaxLength(200)]
+        public string EmailId { get; set; }
+
+        public bool IsDeleted {
+            get;
+            set;
+          }
+        [MaxLength(128)]
+        public string CreatedBy { get; set; }
+        [MaxLength(128)]
+        public string ModifiedBy { get; set; }
+        [MaxLength(50)]
+        public string DateEntered { get; set; }
+        [MaxLength(50)]
+        public string DateModified { get; set; }
+
     }
 }
