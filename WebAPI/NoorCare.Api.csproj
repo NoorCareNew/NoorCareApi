@@ -175,7 +175,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientDocument\" />
-    <Folder Include="ProfilePic\" />
+    <Folder Include="ProfilePic\Doctor\" />
+    <Folder Include="ProfilePic\Secretary\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationOAuthProvider.cs" />
