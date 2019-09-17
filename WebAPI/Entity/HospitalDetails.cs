@@ -14,8 +14,8 @@ public partial class HospitalDetails : IEntity<int>
     [MaxLength(300)]
     public string HospitalName { get; set; }
     public int CountryCode { get; set; }
-    public int Mobile { get; set; }
-    public int AlternateNumber { get; set; }
+    public Int64 Mobile { get; set; }
+    public Int64 AlternateNumber { get; set; }
     [MaxLength(100)]
     public string Email { get; set; }
     public bool EmailConfirmed { get; set; }
@@ -23,8 +23,8 @@ public partial class HospitalDetails : IEntity<int>
     public string Website { get; set; }
     [MaxLength(50)]
     public string EstablishYear { get; set; }
-    public int NumberofBed { get; set; }
-    public int NumberofAmbulance { get; set; }
+    public Int64 NumberofBed { get; set; }
+    public Int64 NumberofAmbulance { get; set; }
     [MaxLength(100)]
     public string PaymentType { get; set; }
     public bool Emergency { get; set; }

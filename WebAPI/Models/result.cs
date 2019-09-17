@@ -40,12 +40,12 @@ namespace WebAPI.Models
     {
         public string HospitalId { get; set; }
         public string HospitalName { get; set; }
-        public int Mobile { get; set; }
-        public int AlternateNumber { get; set; }
+        public Int64 Mobile { get; set; }
+        public Int64 AlternateNumber { get; set; }
         public string Website { get; set; }
         public string EstablishYear { get; set; }
-        public int NumberofBed { get; set; }
-        public int NumberofAmbulance { get; set; }
+        public Int64 NumberofBed { get; set; }
+        public Int64 NumberofAmbulance { get; set; }
         public string PaymentType { get; set; }
         public bool Emergency { get; set; }
         public int FacilityId { get; set; }
