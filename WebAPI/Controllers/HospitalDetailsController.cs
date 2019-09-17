@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
         // GET: api/HospitalDetails
         public HttpResponseMessage GetAll()
         {
-            var result =_hospitaldetailsRepo.GetAll().ToList();
+            var result = _hospitaldetailsRepo.GetAll().ToList();
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
         public HttpResponseMessage GetDetail(string hospitalid)
         {
             var result = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalid).FirstOrDefault();
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);            
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
         [HttpPost]
@@ -81,7 +81,7 @@ namespace WebAPI.Controllers
             return Ok(_hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId));
         }
 
-        
+
         [Route("api/hospitaldetails/delete/{hospitalid}")]
         [HttpDelete]
         [AllowAnonymous]
@@ -101,17 +101,14 @@ namespace WebAPI.Controllers
         public IHttpActionResult UpdateHospitalProfile(string hospitalId, Delta<HospitalDetails> obj)
         {
             HospitalDetails _hospitalDetails = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId).FirstOrDefault();
-            obj.Patch(_hospitalDetails);
-            var result = _hospitaldetailsRepo.Update(_hospitalDetails);
-            return Ok(result);
+            if (_hospitalDetails != null)
+            {
+                obj.Patch(_hospitalDetails);
+                var result = _hospitaldetailsRepo.Update(_hospitalDetails);
+                return Ok(result);
+            }
+
+            return Ok();
         }
-
-
-        //private int getTableId(string hospitalId)
-        //{
-        //    var result = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalId).FirstOrDefault();
-
-        //    return result.Id;
-        //}
     }
 }
