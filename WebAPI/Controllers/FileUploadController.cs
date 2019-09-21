@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
             string imageName = null;
             var httpRequest = HttpContext.Current.Request;
             string quickUploadId = httpRequest.Form["Id"];
-            //string clientId = httpRequest.Form["ClientId"];
+            string clientId = httpRequest.Form["ClientId"];
             string desiesType = httpRequest.Form["DesiesType"];
             var postedFile = httpRequest.Files["Image"];
             string PostedFileName = string.Empty;
@@ -91,12 +91,12 @@ namespace WebAPI.Controllers
                     string day = DateTime.Now.Day.ToString();
                     string time = DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString();// + DateTime.Now.Second.ToString();
 
-                    var filePath = HttpContext.Current.Server.MapPath("~/ClientDocument/" + desiesType + "/" + year + "/" + month + "/" + day + "/" + time);
-                    bool exists = System.IO.Directory.Exists(HttpContext.Current.Server.MapPath("~/ClientDocument/" + desiesType + "/" + year + "/" + month + "/" + day + "/" + time));
-                    if (exists)
-                    {
-                        File.Delete(filePath);
-                    }
+                    var filePath = HttpContext.Current.Server.MapPath("~/ClientDocument/" + desiesType +"/"+ clientId + "/" + year + "/" + month + "/" + day);
+                   // bool exists = System.IO.Directory.Exists(HttpContext.Current.Server.MapPath("~/ClientDocument/" + desiesType + "/" + year + "/" + month + "/" + day));
+                    //if (exists)
+                    //{
+                    //    File.Delete(filePath);
+                    //}
                     Directory.CreateDirectory(filePath);
                     filePath = filePath + "/" + imageName;
                     postedFile.SaveAs(filePath);
