@@ -1,5 +1,6 @@
 ﻿using NoorCare.Repository;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,8 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.OData;
+using WebAPI.Entity;
+using WebAPI.Models;
 using WebAPI.Repository;
 using WebAPI.Services;
 
@@ -19,6 +22,12 @@ namespace WebAPI.Controllers
         IHospitalDetailsRepository _getHospitaldetailsList = RepositoryFactory.Create<IHospitalDetailsRepository>(ContextTypes.EntityFramework);
         ICountryCodeRepository _countryCodeRepository = RepositoryFactory.Create<ICountryCodeRepository>(ContextTypes.EntityFramework);
         Registration _registration = new Registration();
+        IDoctorRepository _doctorRepo = RepositoryFactory.Create<IDoctorRepository>(ContextTypes.EntityFramework);
+        IDiseaseRepository _diseaseDetailRepo = RepositoryFactory.Create<IDiseaseRepository>(ContextTypes.EntityFramework);
+        ITblHospitalServicesRepository _hospitalServicesRepository = RepositoryFactory.Create<ITblHospitalServicesRepository>(ContextTypes.EntityFramework);
+        ITblHospitalAmenitiesRepository _hospitalAmenitieRepository = RepositoryFactory.Create<ITblHospitalAmenitiesRepository>(ContextTypes.EntityFramework);
+        IFeedbackRepository _feedbackRepo = RepositoryFactory.Create<IFeedbackRepository>(ContextTypes.EntityFramework);
+
 
         [Route("api/hospitaldetails/getall")]
         [HttpGet]
@@ -30,15 +39,128 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/hospitaldetails/getdetail/{hospitalid}")]
+        [Route("api/getHospitalDetail/{hospitalid}")]
         [HttpGet]
         [AllowAnonymous]
-        // GET: api/HospitalDetails/5
-        public HttpResponseMessage GetDetail(string hospitalid)
+        public HttpResponseMessage GetHospitalDetail(string hospitalid)
         {
-            var result = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalid).FirstOrDefault();
-            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            List<HospitalDetails> hospitals = _hospitaldetailsRepo.Find(x => x.HospitalId == hospitalid);
+            
+            var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
+            var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
+            Hospital _hospital = new Hospital();
+            List<Hospital> _hospitals = new List<Hospital>();
+
+            foreach (var h in hospitals ?? new List<HospitalDetails>())
+            {
+                var feedback = _feedbackRepo.Find(x => x.PageId == h.HospitalId);
+
+                _hospital = new Hospital
+                {
+                    HospitalId = h.HospitalId,
+                    HospitalName = h.HospitalName,
+                    Mobile = h.Mobile,
+                    AlternateNumber = h.AlternateNumber,
+                    Website = h.Website,
+                    EstablishYear = h.EstablishYear,
+                    NumberofBed = h.NumberofBed,
+                    NumberofAmbulance = h.NumberofAmbulance,
+                    PaymentType = h.PaymentType,
+                    Emergency = h.Emergency,
+                    FacilityId = h.FacilityId,
+                    Address = h.Address,
+                    Street = h.Street,
+                    Country = h.Country,
+                    City = h.City,
+                    PostCode = h.PostCode,
+                    Landmark = h.Landmark,
+                    InsuranceCompanies = h.InsuranceCompanies,
+                    AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),
+                    Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),
+                    ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)),
+                    Services = getHospitalService(h.Services, hospitalService),
+                    Doctors = getDoctors(h.HospitalId),
+                    Likes = feedback.Where(x => x.ILike == true).Count(),
+                    Feedbacks = feedback.Count(),
+                    BookingUrl = $"booking/{h.HospitalId}",
+                    ProfileDetailUrl = $"hospitalDetails/{h.HospitalId}",
+                    ImgUrl = $"{constant.imgUrl}/Hospital/{h.HospitalId}.Jpeg"
+                };
+             
+                _hospitals.Add(_hospital);
+            }
+            return Request.CreateResponse(HttpStatusCode.Accepted, _hospitals);
         }
+
+        #region Uility
+       
+        private List<Doctors> getDoctors(string HospitalId)
+        {
+            List<Disease> _disease = new List<Disease>();
+            List<decimal> _priceses = new List<decimal>();
+            Doctors _doctor = new Doctors();
+            List<Doctors> _doctors = new List<Doctors>();
+            List<Doctor> doctors = _doctorRepo.Find(x => x.HospitalId == HospitalId);
+            var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
+
+            foreach (var d in doctors ?? new List<Doctor>())
+            {
+                var feedback = _feedbackRepo.Find(x => x.PageId == d.DoctorId);
+                _doctor = new Doctors
+                {
+                    DoctorId = d.DoctorId,
+                    FirstName = d.FirstName,
+                    LastName = d.LastName,
+                    Email = d.Email,
+                    PhoneNumber = d.PhoneNumber,
+                    AlternatePhoneNumber = d.AlternatePhoneNumber,
+                    Gender = d.Gender,
+                    Experience = d.Experience,
+                    FeeMoney = d.FeeMoney,
+                    Language = d.Language,
+                    AgeGroupGender = d.AgeGroupGender,
+                    Degree = d.Degree,
+                    SpecializationIds = Array.ConvertAll(d.Specialization.Split(','), s => int.Parse(s)),//d.Specialization,
+                    Specialization = getSpecialization(d.Specialization, disease),
+                    AboutUs = d.AboutUs,
+                    Likes = feedback.Where(x => x.ILike == true).Count(),
+                    Feedbacks = feedback.Count(),
+                    BookingUrl = $"booking/{d.DoctorId}",
+                    ProfileDetailUrl = $"doctorDetails/{d.DoctorId}",
+                    ImgUrl = $"{constant.imgUrl}/Doctor/{d.DoctorId}.Jpeg"
+                };
+
+                _doctors.Add(_doctor);
+            }
+            return _doctors;
+        }
+
+        private List<Disease> getSpecialization(string diesiesType, List<Disease> diseases)
+        {
+            var diesiesTypes = diesiesType.Split(',');
+            int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
+            var diseasesList = diseases.Where(x => myInts.Contains(x.Id)).ToList();
+            return diseasesList;
+        }
+
+        private List<TblHospitalServices> getHospitalService(string serviceType, List<TblHospitalServices> hospitalService)
+        {
+            var serviceTypes = serviceType.Split(',');
+            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+            var hospitalServiceList = hospitalService.Where(x => myInts.Contains(x.Id)).ToList();
+
+            return hospitalServiceList;
+        }
+
+        private List<TblHospitalAmenities> getHospitalAmenities(string amenitieType, List<TblHospitalAmenities> hospitalAmenitie)
+        {
+            var serviceTypes = amenitieType.Split(',');
+            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+            var hospitalAmenitieList = hospitalAmenitie.Where(x => myInts.Contains(x.Id)).ToList();
+
+            return hospitalAmenitieList;
+        }
+        #endregion
 
         [HttpPost]
         [Route("api/hospitaldetails/UploadProfilePic")]
