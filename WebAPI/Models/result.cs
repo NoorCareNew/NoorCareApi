@@ -42,6 +42,7 @@ namespace WebAPI.Models
         public string HospitalName { get; set; }
         public Int64 Mobile { get; set; }
         public Int64 AlternateNumber { get; set; }
+        public string Email { get; set; }
         public string Website { get; set; }
         public string EstablishYear { get; set; }
         public Int64 NumberofBed { get; set; }
@@ -60,6 +61,10 @@ namespace WebAPI.Models
         public List<TblHospitalAmenities> Amenities { get; set; }
         public int[] ServicesIds { get; set; }
         public List<TblHospitalServices> Services { get; set; }
+
+        public int[] SpecializationIds { get; set; }
+        public List<Disease> Specialization { get; set; }
+
         public List<Doctors> Doctors { get; set; }
         public FilterHospital FilterHospital { get; set; }
         public int Likes { get; set; }
