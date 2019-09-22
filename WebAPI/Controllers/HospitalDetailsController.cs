@@ -49,12 +49,14 @@ namespace WebAPI.Controllers
             
             var hospitalService = _hospitalServicesRepository.GetAll().OrderBy(x => x.HospitalServices).ToList();
             var hospitalAmenitie = _hospitalAmenitieRepository.GetAll().OrderBy(x => x.HospitalAmenities).ToList();
+            var disease = _diseaseDetailRepo.GetAll().OrderBy(x => x.DiseaseType).ToList();
             Hospital _hospital = new Hospital();
             List<Hospital> _hospitals = new List<Hospital>();
 
             foreach (var h in hospitals ?? new List<HospitalDetails>())
             {
                 var feedback = _feedbackRepo.Find(x => x.PageId == h.HospitalId);
+                
 
                 _hospital = new Hospital
                 {
@@ -62,6 +64,7 @@ namespace WebAPI.Controllers
                     HospitalName = h.HospitalName,
                     Mobile = h.Mobile,
                     AlternateNumber = h.AlternateNumber,
+                    Email=h.Email,
                     Website = h.Website,
                     EstablishYear = h.EstablishYear,
                     NumberofBed = h.NumberofBed,
@@ -80,6 +83,7 @@ namespace WebAPI.Controllers
                     Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),
                    // ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)),
                     Services = getHospitalService(h.Services, hospitalService),
+                    Specialization = getSpecialization(h.Specialization, disease),
                     Doctors = getDoctors(h.HospitalId),
                     Likes = feedback.Where(x => x.ILike == true).Count(),
                     Feedbacks = feedback.Count(),
