@@ -39,7 +39,8 @@ namespace WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Accepted, result);
         }
 
-        [Route("api/getHospitalDetail/{hospitalid}")]
+        //[Route("api/getHospitalDetail/{hospitalid}")] this is renamed by below name
+        [Route("api/hospitaldetails/getdetail/{hospitalid}")]
         [HttpGet]
         [AllowAnonymous]
         public HttpResponseMessage GetHospitalDetail(string hospitalid)
