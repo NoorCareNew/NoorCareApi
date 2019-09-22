@@ -75,9 +75,9 @@ namespace WebAPI.Controllers
                     PostCode = h.PostCode,
                     Landmark = h.Landmark,
                     InsuranceCompanies = h.InsuranceCompanies,
-                    AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),
+                   // AmenitiesIds = Array.ConvertAll(h.Amenities.Split(','), s => int.Parse(s)),
                     Amenities = getHospitalAmenities(h.Amenities, hospitalAmenitie),
-                    ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)),
+                   // ServicesIds = Array.ConvertAll(h.Services.Split(','), s => int.Parse(s)),
                     Services = getHospitalService(h.Services, hospitalService),
                     Doctors = getDoctors(h.HospitalId),
                     Likes = feedback.Where(x => x.ILike == true).Count(),
@@ -137,28 +137,46 @@ namespace WebAPI.Controllers
 
         private List<Disease> getSpecialization(string diesiesType, List<Disease> diseases)
         {
-            var diesiesTypes = diesiesType.Split(',');
-            int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
-            var diseasesList = diseases.Where(x => myInts.Contains(x.Id)).ToList();
-            return diseasesList;
+            if (!string.IsNullOrEmpty(diesiesType))
+            {
+                var diesiesTypes = diesiesType.Split(',');
+                int[] myInts = Array.ConvertAll(diesiesTypes, s => int.Parse(s));
+                var diseasesList = diseases.Where(x => myInts.Contains(x.Id)).ToList();
+                return diseasesList;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private List<TblHospitalServices> getHospitalService(string serviceType, List<TblHospitalServices> hospitalService)
         {
-            var serviceTypes = serviceType.Split(',');
-            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
-            var hospitalServiceList = hospitalService.Where(x => myInts.Contains(x.Id)).ToList();
-
-            return hospitalServiceList;
+            if (!string.IsNullOrEmpty(serviceType))
+            {
+                var serviceTypes = serviceType.Split(',');
+                int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+                var hospitalServiceList = hospitalService.Where(x => myInts.Contains(x.Id)).ToList();
+                return hospitalServiceList;
+            }
+            else
+                return null;
         }
 
         private List<TblHospitalAmenities> getHospitalAmenities(string amenitieType, List<TblHospitalAmenities> hospitalAmenitie)
         {
-            var serviceTypes = amenitieType.Split(',');
-            int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
-            var hospitalAmenitieList = hospitalAmenitie.Where(x => myInts.Contains(x.Id)).ToList();
+            if (!string.IsNullOrEmpty(amenitieType))
+            {
+                var serviceTypes = amenitieType.Split(',');
+                int[] myInts = Array.ConvertAll(serviceTypes, s => int.Parse(s));
+                var hospitalAmenitieList = hospitalAmenitie.Where(x => myInts.Contains(x.Id)).ToList();
 
-            return hospitalAmenitieList;
+                return hospitalAmenitieList;
+            }
+            else
+            {
+                return null;
+            }
         }
         #endregion
 
