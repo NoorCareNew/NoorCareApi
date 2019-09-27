@@ -202,6 +202,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
+    <Compile Include="Controllers\NewsBlogsController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\MasterController.cs" />
     <Compile Include="Controllers\FeedbackController.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Entity\Appointment.cs" />
+    <Compile Include="Entity\NewsBlogs.cs" />
     <Compile Include="Entity\TimeMaster.cs" />
     <Compile Include="Entity\Feedback.cs" />
     <Compile Include="Entity\Doctor.cs" />

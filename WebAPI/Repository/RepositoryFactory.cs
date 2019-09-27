@@ -114,6 +114,10 @@ namespace NoorCare.Repository
                     {
                         return new PatientPrescriptionRepository() as TRepository;
                     }
+                    if (typeof(TRepository) == typeof(INewsBlogsRepository))
+                    {
+                        return new NewsBlogsRepository() as TRepository;
+                    }
                     
                     return null;
                 default:
